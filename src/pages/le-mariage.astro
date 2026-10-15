@@ -1,21 +1,30 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import PageLayout from '../layouts/PageLayout.astro';
+import { site } from '../data/site';
 ---
 
-<Layout title="Le mariage — Tiffany et Charles">
+<PageLayout title={`Le mariage — ${site.name}`}>
 	<section class="page">
 		<h1>Le mariage</h1>
 	</section>
-</Layout>
+</PageLayout>
 
 <style>
 	.page {
 		max-width: 1200px;
 		margin: 0 auto;
-		padding: 4rem 1.5rem;
+		padding: 3rem 1.5rem 4rem;
 	}
 
 	h1 {
+		margin: 0;
 		font-weight: 300;
+		font-size: clamp(2rem, 5vw, 3rem);
+	}
+
+	@media (max-width: 720px) {
+		.page {
+			padding: 2rem 1.25rem 3rem;
+		}
 	}
 </style>

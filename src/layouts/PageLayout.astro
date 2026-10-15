@@ -1,0 +1,26 @@
+---
+import Layout from './Layout.astro';
+import SiteNav from '../components/SiteNav.astro';
+import { site } from '../data/site';
+
+export interface Props {
+	title?: string;
+	description?: string;
+}
+
+const { title = site.name, description } = Astro.props;
+---
+
+<Layout title={title} description={description}>
+	<header slot="header" class="page-header">
+		<SiteNav variant="bar" />
+	</header>
+
+	<slot />
+</Layout>
+
+<style>
+	.page-header {
+		background: var(--color-cream);
+	}
+</style>

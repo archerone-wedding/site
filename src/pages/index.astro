@@ -1,15 +1,21 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import SiteNav from '../components/SiteNav.astro';
+import { site } from '../data/site';
 ---
 
-<Layout title="Tiffany et Charles">
+<Layout>
+	<div slot="header" class="landing-nav">
+		<SiteNav variant="inline" />
+	</div>
+
 	<section class="hero">
 		<div class="hero-panel">
-			<h1>Tiffany et<br />Charles</h1>
-			<p class="subtitle">Nous allons nous marier !</p>
-			<p class="date">Samedi 22 avril 2023</p>
+			<h1>{site.nameLines[0]}<br />{site.nameLines[1]}</h1>
+			<p class="subtitle">{site.subtitle}</p>
+			<p class="date">{site.date}</p>
 		</div>
-		<div class="hero-media" role="img" aria-label="Tiffany et Charles">
+		<div class="hero-media" role="img" aria-label={site.name}>
 			<span>Photo à venir</span>
 		</div>
 		<div class="hero-photo" role="img" aria-label="Photo des mariés">
@@ -19,6 +25,10 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <style>
+	.landing-nav {
+		padding: 0.75rem 1.5rem;
+	}
+
 	.hero {
 		position: relative;
 		display: grid;

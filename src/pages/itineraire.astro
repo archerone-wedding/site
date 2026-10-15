@@ -1,21 +1,88 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import PageLayout from '../layouts/PageLayout.astro';
+import VenueMap from '../components/VenueMap.astro';
+import { site } from '../data/site';
+import {
+	venue,
+	venueAddress,
+	venueDirectionsUrl,
+	venueOsmUrl,
+} from '../data/wedding';
 ---
 
-<Layout title="Itinéraire — Tiffany et Charles">
+<PageLayout
+	title={`Itinéraire — ${site.name}`}
+	description={`Itinéraire vers ${venueAddress}`}
+>
 	<section class="page">
 		<h1>Itinéraire</h1>
+
+		<div class="venue">
+			<p class="venue__name">{venue.name}</p>
+			<address class="venue__address">{venueAddress}</address>
+
+			<ul class="venue__links">
+				<li>
+					<a href={venueDirectionsUrl} rel="noopener noreferrer" target="_blank">
+						Ouvrir l'itinéraire
+					</a>
+				</li>
+				<li>
+					<a href={venueOsmUrl} rel="noopener noreferrer" target="_blank">
+						Voir sur OpenStreetMap
+					</a>
+				</li>
+			</ul>
+		</div>
+
+		<VenueMap lat={venue.lat} lon={venue.lon} zoom={venue.zoom} label={venueAddress} />
 	</section>
-</Layout>
+</PageLayout>
 
 <style>
 	.page {
 		max-width: 1200px;
 		margin: 0 auto;
-		padding: 4rem 1.5rem;
+		padding: 3rem 1.5rem 4rem;
 	}
 
 	h1 {
+		margin: 0 0 2rem;
 		font-weight: 300;
+		font-size: clamp(2rem, 5vw, 3rem);
+	}
+
+	.venue {
+		margin-bottom: 2rem;
+	}
+
+	.venue__name {
+		margin: 0 0 0.25rem;
+		font-weight: 600;
+	}
+
+	.venue__address {
+		margin: 0 0 1.25rem;
+		font-style: normal;
+		color: var(--color-muted);
+	}
+
+	.venue__links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.5rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.venue__links a {
+		color: var(--color-teal);
+	}
+
+	@media (max-width: 720px) {
+		.page {
+			padding: 2rem 1.25rem 3rem;
+		}
 	}
 </style>

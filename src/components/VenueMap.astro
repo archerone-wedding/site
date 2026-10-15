@@ -1,0 +1,156 @@
+---
+import 'leaflet/dist/leaflet.css';
+
+export interface Props {
+	lat: number;
+	lon: number;
+	zoom?: number;
+	label: string;
+	height?: string;
+}
+
+const {
+	lat,
+	lon,
+	zoom = 16,
+	label,
+	height = 'clamp(260px, 45vw, 400px)',
+} = Astro.props;
+---
+
+<div
+	class="venue-map"
+	data-lat={lat}
+	data-lon={lon}
+	data-zoom={zoom}
+	data-label={label}
+	role="region"
+	aria-label={`Carte : ${label}`}
+	style={`--venue-map-height: ${height}`}
+>
+	<noscript>
+		<p class="venue-map__fallback">{label}</p>
+	</noscript>
+</div>
+
+<script>
+	import L from 'leaflet';
+
+	const TILE_URL = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+	const ATTRIBUTION =
+		'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
+	document.querySelectorAll<HTMLElement>('.venue-map').forEach((el) => {
+		const lat = Number(el.dataset.lat);
+		const lon = Number(el.dataset.lon);
+		const zoom = Number(el.dataset.zoom ?? '16');
+		const label = el.dataset.label ?? '';
+
+		if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+			return;
+		}
+
+		const map = L.map(el, {
+			center: [lat, lon],
+			zoom: Number.isFinite(zoom) ? zoom : 16,
+			scrollWheelZoom: false,
+			zoomControl: true,
+			keyboard: true,
+		});
+
+		L.tileLayer(TILE_URL, {
+			maxZoom: 19,
+			attribution: ATTRIBUTION,
+		}).addTo(map);
+
+		const icon = L.divIcon({
+			className: 'venue-map-pin',
+			html: '<span class="venue-map-pin__body"></span>',
+			iconSize: [30, 42],
+			iconAnchor: [15, 42],
+		});
+
+		L.marker([lat, lon], {
+			icon,
+			title: label,
+			alt: label,
+			keyboard: true,
+		}).addTo(map);
+
+		// Enable wheel zoom only while the pointer is over the map so the page
+		// stays scrollable on trackpads and touch devices.
+		map.on('click', () => map.scrollWheelZoom.enable());
+		map.on('mouseout', () => map.scrollWheelZoom.disable());
+
+		let reflowTimer: ReturnType<typeof setTimeout> | undefined;
+		const reflow = () => {
+			clearTimeout(reflowTimer);
+			reflowTimer = setTimeout(() => map.invalidateSize(), 200);
+		};
+
+		window.addEventListener('resize', reflow);
+		window.addEventListener('orientationchange', reflow);
+	});
+</script>
+
+<style>
+	.venue-map {
+		position: relative;
+		z-index: 0;
+		width: 100%;
+		height: var(--venue-map-height, clamp(260px, 45vw, 400px));
+		border-radius: 4px;
+		overflow: hidden;
+		background: #e6ded4;
+	}
+
+	.venue-map__fallback {
+		margin: 0;
+		padding: 1.5rem;
+		color: var(--color-muted);
+		text-align: center;
+	}
+
+	/* Leaflet injects its own DOM, so these styles must stay global. */
+	:global(.venue-map .leaflet-container) {
+		font-family: inherit;
+		background: #e6ded4;
+	}
+
+	:global(.venue-map .leaflet-control-zoom a) {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		line-height: 1;
+		color: var(--color-ink);
+	}
+
+	:global(.venue-map .leaflet-control-attribution) {
+		font-size: 0.7rem;
+		background: rgba(250, 248, 245, 0.85);
+	}
+
+	:global(.venue-map-pin) {
+		background: none;
+		border: none;
+	}
+
+	:global(.venue-map-pin__body) {
+		display: block;
+		width: 30px;
+		height: 42px;
+		background: var(--color-teal);
+		border: 2px solid var(--color-cream);
+		border-radius: 50% 50% 50% 0;
+		transform: rotate(-45deg);
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+	}
+
+	@media (max-width: 480px) {
+		:global(.venue-map .leaflet-control-attribution) {
+			font-size: 0.65rem;
+		}
+	}
+</style>

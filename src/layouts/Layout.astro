@@ -1,19 +1,15 @@
 ---
+import { site } from '../data/site';
+
 export interface Props {
-	title: string;
+	title?: string;
 	description?: string;
 }
 
 const {
-	title,
-	description = 'Tiffany et Charles — Nous allons nous marier !',
+	title = site.name,
+	description = `${site.name} — ${site.subtitle}`,
 } = Astro.props;
-
-const navItems = [
-	{ label: 'Le mariage', href: '/le-mariage' },
-	{ label: 'Registre', href: '/registre' },
-	{ label: 'Itinéraire', href: '/itineraire' },
-];
 ---
 
 <!doctype html>
@@ -29,32 +25,14 @@ const navItems = [
 		<title>{title}</title>
 	</head>
 	<body>
-		<header class="site-header">
-			<nav class="site-nav" aria-label="Navigation principale">
-				<a class="brand" href="/">Tiffany et Charles</a>
-				<ul class="nav-links">
-					{
-						navItems.map((item) => (
-							<li>
-								<a
-									href={item.href}
-									class:list={{ active: Astro.url.pathname === item.href }}
-								>
-									{item.label}
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</nav>
-		</header>
+		<slot name="header" />
 
 		<main>
 			<slot />
 		</main>
 
 		<footer class="site-footer">
-			<p>Tiffany et Charles — 2026</p>
+			<p>{site.name}</p>
 		</footer>
 	</body>
 </html>
@@ -106,82 +84,13 @@ const navItems = [
 		line-height: 1.5;
 	}
 
-	.site-header {
-		background: var(--color-cream);
-	}
-
-	.site-nav {
-		display: flex;
-		align-items: center;
-		gap: 2rem;
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 1.25rem 1.5rem;
-	}
-
-	.brand {
-		font-weight: 600;
-		text-decoration: none;
-		color: var(--color-ink);
-	}
-
-	.nav-links {
-		display: flex;
-		gap: 1.5rem;
-		list-style: none;
-		margin: 0;
-		padding: 0;
-	}
-
-	.nav-links a {
-		color: var(--color-muted);
-		text-decoration: none;
-		font-size: 0.95rem;
-		display: inline-block;
-		padding: 0.4rem 0;
-	}
-
-	.nav-links a:hover,
-	.nav-links a.active {
-		color: var(--color-ink);
-	}
-
-	.nav-links a.active {
-		border-bottom: 1px solid var(--color-ink);
-	}
-
 	main {
 		flex: 1;
 	}
-
 	.site-footer {
 		padding: 2rem 1.5rem;
 		text-align: center;
 		color: var(--color-muted);
 		font-size: 0.85rem;
-	}
-
-	@media (max-width: 720px) {
-		.site-nav {
-			flex-direction: column;
-			align-items: flex-start;
-			gap: 0.75rem;
-			padding: 1rem 1.25rem;
-		}
-
-		.nav-links {
-			flex-wrap: wrap;
-			gap: 0.25rem 1.25rem;
-		}
-	}
-
-	@media (max-width: 380px) {
-		.brand {
-			font-size: 0.95rem;
-		}
-
-		.nav-links a {
-			font-size: 0.85rem;
-		}
 	}
 </style>
