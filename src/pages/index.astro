@@ -1,16 +1,158 @@
 ---
+import Layout from '../layouts/Layout.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Tiffany et Charles</h1>
-	</body>
-</html>
+<Layout title="Tiffany et Charles">
+	<section class="hero">
+		<div class="hero-panel">
+			<h1>Tiffany et<br />Charles</h1>
+			<p class="subtitle">Nous allons nous marier !</p>
+			<p class="date">Samedi 22 avril 2023</p>
+		</div>
+		<div class="hero-media" role="img" aria-label="Tiffany et Charles">
+			<span>Photo à venir</span>
+		</div>
+		<div class="hero-photo" role="img" aria-label="Photo des mariés">
+			<span>Photo des mariés à venir</span>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.hero {
+		position: relative;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0;
+		width: 100%;
+		margin: 0;
+		padding: 0;
+		align-items: stretch;
+	}
+
+	.hero-photo {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 2;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: min(420px, 55vw);
+		aspect-ratio: 4 / 5;
+		background: #cdbfae;
+		border: 8px solid var(--color-cream);
+		color: var(--color-muted);
+		font-size: 0.8rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		text-align: center;
+		padding: 1rem;
+	}
+
+	.hero-panel {
+		position: relative;
+		overflow: hidden;
+		background: var(--color-teal);
+		color: #fff;
+		padding: 6rem 3rem;
+		aspect-ratio: 1 / 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.hero-panel::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: radial-gradient(
+			circle at 20% 80%,
+			rgba(0, 0, 0, 0.25),
+			transparent 60%
+		);
+		pointer-events: none;
+	}
+
+	.hero-panel > * {
+		position: relative;
+		z-index: 1;
+	}
+
+	h1 {
+		margin: 0 0 2.5rem;
+		font-size: clamp(2.5rem, 6vw, 4.5rem);
+		font-weight: 300;
+		line-height: 1.05;
+	}
+
+	.subtitle {
+		margin: 0 0 0.5rem;
+		font-size: 1.1rem;
+	}
+
+	.date {
+		margin: 0;
+		font-size: 0.9rem;
+		opacity: 0.85;
+	}
+
+	.hero-media {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #e6ded4;
+		color: var(--color-muted);
+		font-size: 0.9rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		aspect-ratio: 1 / 1;
+	}
+
+	@media (max-width: 860px) {
+		.hero {
+			grid-template-columns: 1fr;
+		}
+
+		.hero-panel {
+			padding: 2.75rem 1.75rem 6rem;
+			aspect-ratio: auto;
+		}
+
+		h1 {
+			margin-bottom: 1.5rem;
+		}
+
+		.hero-media {
+			order: 3;
+			aspect-ratio: 1 / 1;
+		}
+
+		.hero-photo {
+			position: relative;
+			top: auto;
+			left: auto;
+			transform: none;
+			order: 2;
+			width: min(300px, 68vw);
+			margin: -80px auto -80px;
+			border-width: 6px;
+		}
+	}
+
+	@media (max-width: 420px) {
+		.hero-panel {
+			padding: 2rem 1.25rem 5rem;
+		}
+
+		.subtitle {
+			font-size: 1rem;
+		}
+
+		.hero-photo {
+			width: min(260px, 72vw);
+			margin: -64px auto -64px;
+		}
+	}
+</style>
