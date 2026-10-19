@@ -1,13 +1,13 @@
 export const venue = {
-	name: "Salle de réception",
-	street: "11 rue de Beauregard",
-	postalCode: "27430",
-	city: "Saint-Étienne-du-Vauvray",
+	name: "Château du Chesnay-Haguest",
+	street: "Le Chesnay",
+	postalCode: "27630",
+	city: "Vexin-sur-Epte",
 	country: "France",
 	// Coordinates are the village centre fallback: the exact building is not
 	// mapped in OpenStreetMap yet. Confirm with the venue and update these two.
-	lat: 49.2441327,
-	lon: 1.214752,
+	lat: 49.172339,
+	lon: 1.6016258,
 	zoom: 16,
 } as const;
 
