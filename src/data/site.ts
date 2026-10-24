@@ -2,7 +2,7 @@ export const site = {
 	name: "Tiffany et Charles",
 	/** Name split per line for the landing hero heading. */
 	nameLines: ["Tiffany", "Charles"],
-	date: "Samedi 22 avril 2023",
+	date: "Samedi 29 mai 2027",
 	subtitle: "Nous allons nous marier !",
 } as const;
 
