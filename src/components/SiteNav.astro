@@ -14,15 +14,43 @@ const { variant = 'bar' } = Astro.props;
 	<ul class="site-nav__links">
 		{
 			navItems.map((item) => (
-				<li>
-					<a
-						href={item.href}
-						class:list={{
-							active: Astro.url.pathname.startsWith(item.href),
-						}}
-					>
-						{item.label}
-					</a>
+				<li class:list={[{ 'has-children': item.children }]}>
+					{item.href ? (
+						<a
+							href={item.href}
+							class:list={{
+								active: Astro.url.pathname.startsWith(item.href),
+							}}
+						>
+							{item.label}
+							{item.children && (
+								<span class="caret" aria-hidden="true">▾</span>
+							)}
+						</a>
+					) : (
+						<button type="button" class="nav-trigger">
+							{item.label}
+							{item.children && (
+								<span class="caret" aria-hidden="true">▾</span>
+							)}
+						</button>
+					)}
+					{item.children && (
+						<ul class="submenu">
+							{item.children.map((child) => (
+								<li>
+									<a
+										href={child.href}
+										class:list={{
+											active: Astro.url.pathname === child.href || Astro.url.pathname.startsWith(child.href + '/'),
+										}}
+									>
+										{child.label}
+									</a>
+								</li>
+							))}
+						</ul>
+					)}
 				</li>
 			))
 		}
@@ -68,21 +96,84 @@ const { variant = 'bar' } = Astro.props;
 		padding: 0;
 	}
 
-	.site-nav__links a {
-		display: inline-block;
+	.site-nav__links > li > a,
+	.site-nav__links > li > .nav-trigger {
+		display: inline-flex;
+		align-items: center;
 		padding: 0.3rem 0;
 		color: var(--color-muted);
 		text-decoration: none;
 		font-size: 0.9rem;
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-family: inherit;
 	}
 
 	.site-nav__links a:hover,
-	.site-nav__links a.active {
+	.site-nav__links a.active,
+	.site-nav__links .nav-trigger:hover {
 		color: var(--color-ink);
 	}
 
-	.site-nav__links a.active {
+	.site-nav__links > li > a.active {
 		border-bottom: 1px solid currentColor;
+	}
+
+	/* Dropdown */
+	.site-nav__links li.has-children {
+		position: relative;
+	}
+
+	.caret {
+		font-size: 0.65rem;
+		margin-left: 0.25rem;
+		opacity: 0.6;
+	}
+
+	.submenu {
+		position: absolute;
+		top: calc(100% + 0.35rem);
+		left: 50%;
+		transform: translateX(-50%);
+		min-width: 10rem;
+		background: var(--color-cream, #fff);
+		border: 1px solid rgba(47, 42, 38, 0.12);
+		border-radius: 0.4rem;
+		padding: 0.35rem 0;
+		list-style: none;
+		box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+		transition: opacity 150ms ease, visibility 150ms ease;
+		z-index: 100;
+	}
+
+	.submenu a {
+		display: block;
+		padding: 0.45rem 1rem;
+		white-space: nowrap;
+		font-size: 0.9rem;
+		color: var(--color-muted);
+		text-decoration: none;
+	}
+
+	.submenu a:hover,
+	.submenu a.active {
+		color: var(--color-ink);
+	}
+
+	.submenu a.active {
+		background: rgba(47, 42, 38, 0.05);
+		border-radius: 0.25rem;
+	}
+
+	.site-nav__links li.has-children:hover > .submenu,
+	.site-nav__links li.has-children:focus-within > .submenu {
+		opacity: 1;
+		visibility: visible;
+		pointer-events: auto;
 	}
 
 	@media (max-width: 720px) {
@@ -100,6 +191,27 @@ const { variant = 'bar' } = Astro.props;
 		.site-nav--inline {
 			gap: 0.25rem 1rem;
 		}
+
+		.submenu {
+			position: static;
+			transform: none;
+			box-shadow: none;
+			border: none;
+			background: transparent;
+			padding: 0.1rem 0 0 0.75rem;
+			opacity: 1;
+			visibility: visible;
+			pointer-events: auto;
+		}
+
+		.submenu a {
+			padding: 0.25rem 0;
+			font-size: 0.85rem;
+		}
+
+		.caret {
+			display: none;
+		}
 	}
 
 	@media (max-width: 380px) {
@@ -107,7 +219,8 @@ const { variant = 'bar' } = Astro.props;
 			font-size: 0.95rem;
 		}
 
-		.site-nav__links a {
+		.site-nav__links > li > a,
+		.site-nav__links > li > .nav-trigger {
 			font-size: 0.85rem;
 		}
 	}
