@@ -3,7 +3,7 @@ export const site = {
 	/** Name split per line for the landing hero heading. */
 	nameLines: ["Tiffany", "Charles"],
 	date: "Samedi 29 mai 2027",
-	subtitle: "Nous allons nous marier !",
+	subtitle: "Bienvenue sur notre site de mariage ! Vous trouverez ici toutes les informations pour préparer cette journée. Nous vous remercions de bien vouloir confirmer votre présence via ce formulaire avant le 28 février 2027.",
 } as const;
 
 export interface NavItem {
