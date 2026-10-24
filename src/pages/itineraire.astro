@@ -7,14 +7,41 @@ import {
 	venueAddress,
 	venueDirectionsUrl,
 	venueOsmUrl,
+	church,
+	churchAddress,
+	churchDirectionsUrl,
+	churchOsmUrl,
 } from '../data/wedding';
 ---
 
 <PageLayout
-	title={`Itinéraire — ${site.name}`}
-	description={`Itinéraire vers ${venueAddress}`}
+	title={`Accès — ${site.name}`}
+	description={`Se rendre à ${churchAddress}`}
 >
 	<section class="page">
+		<h1>Itinéraire</h1>
+
+		<div class="church">
+			<p class="church__name">{church.name}</p>
+			<address class="church__address">{churchAddress}</address>
+
+			<ul class="church__links">
+				<li>
+					<a href={churchDirectionsUrl} rel="noopener noreferrer" target="_blank">
+						Ouvrir l'itinéraire
+					</a>
+				</li>
+				<li>
+					<a href={churchOsmUrl} rel="noopener noreferrer" target="_blank">
+						Voir sur OpenStreetMap
+					</a>
+				</li>
+			</ul>
+		</div>
+
+		<churchMap lat={church.lat} lon={church.lon} zoom={church.zoom} label={churchAddress} />
+	</section>
+<section class="page">
 		<h1>Itinéraire</h1>
 
 		<div class="venue">
