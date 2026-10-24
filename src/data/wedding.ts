@@ -20,3 +20,25 @@ export const venueAddress = [
 export const venueOsmUrl = `https://www.openstreetmap.org/?mlat=${venue.lat}&mlon=${venue.lon}#map=${venue.zoom}/${venue.lat}/${venue.lon}`;
 
 export const venueDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(venueAddress)}`;
+
+export const church = {
+	street: "Le Chesnay",
+	name: "Église Notre-Dame de Tourny",
+	postalCode: "27510",
+	city: "Vexin-sur-Epte",
+	country: "France",
+	lat: 49.2092933, 
+	lon: 1.5683631,
+	zoom: 17,
+} as const;
+
+export const churchAddress = [
+	church.street,
+	`${church.postalCode} ${church.city}`,
+	church.country,
+].join(", ");
+
+export const churchOsmUrl = `https://www.openstreetmap.org/?mlat=${church.lat}&mlon=${church.lon}#map=${church.zoom}/${church.lat}/${church.lon}`;
+
+export const churchDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(churchAddress)}`;
+
