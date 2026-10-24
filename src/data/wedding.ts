@@ -22,8 +22,8 @@ export const venueOsmUrl = `https://www.openstreetmap.org/?mlat=${venue.lat}&mlo
 export const venueDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(venueAddress)}`;
 
 export const church = {
-	street: "Le Chesnay",
 	name: "Église Notre-Dame de Tourny",
+	street: "1 rue Aval",
 	postalCode: "27510",
 	city: "Vexin-sur-Epte",
 	country: "France",
@@ -42,3 +42,12 @@ export const churchOsmUrl = `https://www.openstreetmap.org/?mlat=${church.lat}&m
 
 export const churchDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(churchAddress)}`;
 
+export const contact= {
+	name: "Tiffany Harvel et Charles Labelle",
+	street: "87 rue de Billancourt",
+	postalcode: "92100",
+	city: "Boulogne-Billancourt",
+	country: "France",
+
+
+} as const ;
