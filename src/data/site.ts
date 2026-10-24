@@ -16,6 +16,9 @@ export interface NavItem {
  * adding/renaming a route happens in exactly one place.
  */
 export const navItems: readonly NavItem[] = [
-	{ label: "Le mariage", href: "/le-mariage" },
-	{ label: "Itinéraire", href: "/itineraire" },
+	{ label: "Programme", href: "/le-mariage" },
+	{ label: "Accès", href: "/itineraire" },
+	{ label: "Nous contacter", href: "/contact" },
+	{ label: "Informations légales", href: "/legad" },
+	{ label: "Logements", href: "/logement" },
 ];
