@@ -8,7 +8,8 @@ export const site = {
 
 export interface NavItem {
 	label: string;
-	href: string;
+	href?: string;
+	children?: readonly NavItem[];
 }
 
 /**
@@ -17,8 +18,14 @@ export interface NavItem {
  */
 export const navItems: readonly NavItem[] = [
 	{ label: "Programme", href: "/le-mariage" },
-	{ label: "Accès", href: "/itineraire" },
-	{ label: "Nous contacter", href: "/contact" },
-	{ label: "Informations légales", href: "/legad" },
-	{ label: "Logements", href: "/logement" },
+	{
+		label: "Préparatifs",
+		children: [
+			{ label: "Accès", href: "/itineraire" },
+			{ label: "Logements", href: "/logement" },
+			{ label: "Informations légales", href: "/legad" },
+			{ label: "Nous contacter", href: "/contact" },
+		],
+	},
+	
 ];
