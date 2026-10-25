@@ -1,11 +1,23 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 import { site } from '../data/site';
+import ProgramA from '../components/program/ProgramA.astro';
+import ProgramB from '../components/program/ProgramB.astro';
+import ProgramC from '../components/program/ProgramC.astro';
+import ProgramD from '../components/program/ProgramD.astro';
+
+const group = Astro.locals.group;
+const cat = group?.category || 'A';
 ---
 
 <PageLayout title={`Le mariage — ${site.name}`}>
 	<section class="page">
-		<h1>Le mariage</h1>
+		<h1>Le programme</h1>
+
+		{cat === 'A' && <ProgramA />}
+		{cat === 'B' && <ProgramB />}
+		{cat === 'C' && <ProgramC />}
+		{cat === 'D' && <ProgramD />}
 	</section>
 </PageLayout>
 
@@ -17,9 +29,10 @@ import { site } from '../data/site';
 	}
 
 	h1 {
-		margin: 0;
+		margin: 0 0 2rem;
 		font-weight: 300;
 		font-size: clamp(2rem, 5vw, 3rem);
+		text-align: center;
 	}
 
 	@media (max-width: 720px) {

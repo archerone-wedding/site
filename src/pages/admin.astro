@@ -1,0 +1,167 @@
+---
+import { actions } from 'astro:actions';
+import { isActionError } from 'astro:actions';
+import { eq } from 'drizzle-orm';
+import { db } from '../db/client';
+import { guestGroup } from '../db/schema';
+
+const ADMIN_SECRET = import.meta.env.ADMIN_SECRET || 'admin-mariage-2027';
+
+const secret = Astro.url.searchParams.get('secret');
+const isAdmin = secret === ADMIN_SECRET;
+
+let groups: Awaited<ReturnType<typeof db.select>> = [];
+if (isAdmin) {
+	groups = await db.select().from(guestGroup).orderBy(guestGroup.id);
+}
+
+const createResult = Astro.getActionResult(actions.createGroup);
+const createError =
+	createResult?.error && isActionError(createResult.error)
+		? createResult.error.message
+		: null;
+---
+
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>Admin — Mariage</title>
+		<style>
+			:root {
+				--color-cream: #faf8f5;
+				--color-ink: #2f2a26;
+				--color-teal: #47666f;
+				--color-teal-dark: #3a565e;
+				--color-muted: #7c756e;
+			}
+			* { box-sizing: border-box; }
+			body {
+				margin: 0;
+				min-height: 100dvh;
+				background: var(--color-cream);
+				color: var(--color-ink);
+				font-family: 'Helvetica Neue', Helvetica, Arial, ui-sans-serif, system-ui, sans-serif;
+				line-height: 1.5;
+				padding: 2rem 1.5rem;
+				max-width: 800px;
+				margin-inline: auto;
+			}
+			h1 { font-weight: 300; font-size: 2rem; margin: 0 0 1.5rem; }
+			label { display: block; margin-bottom: 0.25rem; font-size: 0.85rem; color: var(--color-muted); }
+			input, textarea, select {
+				width: 100%;
+				padding: 0.6rem 0.8rem;
+				font-size: 1rem;
+				border: 1px solid rgba(47,42,38,0.2);
+				border-radius: 0.35rem;
+				margin-bottom: 1rem;
+				font-family: inherit;
+				background: #fff;
+			}
+			button {
+				padding: 0.6rem 1.2rem;
+				font-size: 1rem;
+				background: var(--color-teal);
+				color: #fff;
+				border: none;
+				border-radius: 0.35rem;
+				cursor: pointer;
+				font-family: inherit;
+			}
+			button:hover { background: var(--color-teal-dark); }
+			.error { color: #c0392b; font-size: 0.9rem; margin-top: -0.5rem; margin-bottom: 1rem; }
+			table { width: 100%; border-collapse: collapse; margin-top: 2rem; font-size: 0.9rem; }
+			th, td { text-align: left; padding: 0.6rem 0.5rem; border-bottom: 1px solid rgba(47,42,38,0.1); }
+			th { color: var(--color-muted); font-weight: 500; }
+			code { background: rgba(47,42,38,0.06); padding: 0.15rem 0.4rem; border-radius: 0.25rem; font-size: 0.85rem; }
+			.logout { color: var(--color-teal); text-decoration: underline; cursor: pointer; background:none; border:none; padding:0; font-size:0.9rem; }
+			.gate { max-width: 360px; margin: 8rem auto; text-align: center; }
+			.gate input { margin-bottom: 0.75rem; }
+		</style>
+	</head>
+	<body>
+		{
+			!isAdmin ? (
+				<div class="gate">
+					<h1>Admin</h1>
+					<p style="color:var(--color-muted); margin:0 0 1.25rem;">
+						Entrez le mot de passe pour accéder à l'administration.
+					</p>
+					<form method="get">
+						<input type="password" name="secret" placeholder="Mot de passe" required autofocus />
+						<button type="submit">Entrer</button>
+					</form>
+				</div>
+			) : (
+				<>
+					<h1>Invités</h1>
+					<form method="post" action={actions.createGroup}>
+						<label for="name">Nom du groupe</label>
+						<input type="text" id="name" name="name" required />
+
+						<label for="email">E-mail</label>
+						<input type="email" id="email" name="email" required />
+
+						<label for="program">Programme personnalisé</label>
+						<textarea id="program" name="program" rows="3" />
+
+						<label style="display:flex;align-items:center;gap:0.4rem;margin-bottom:1rem;">
+							<input type="checkbox" name="plusOneAllowed" value="true" />
+							Peut amener un +1
+						</label>
+
+						<label for="category">Catégorie d'invitation</label>
+						<select id="category" name="category">
+							<option value="A" selected>A — Vin d'honneur, dîner et brunch</option>
+							<option value="B">B — Vin d'honneur, dîner et brunch</option>
+							<option value="C">C — Vin d'honneur et dîner</option>
+							<option value="D">D — Vin d'honneur uniquement</option>
+						</select>
+
+						{createError && <p class="error">{createError}</p>}
+						{createResult?.data && (
+							<p style="color:var(--color-teal);margin:0 0 1rem;">
+								Groupe créé — code : <code>{createResult.data.code}</code>
+							</p>
+						)}
+						<button type="submit">Ajouter le groupe</button>
+					</form>
+
+					<table>
+						<thead>
+							<tr>
+								<th>Nom</th>
+								<th>Code</th>
+								<th>Email</th>
+								<th>Actif</th>
+								<th>Catégorie</th>
+								<th />
+							</tr>
+						</thead>
+						<tbody>
+							{groups.map((g) => (
+								<tr>
+									<td>{g.name}</td>
+									<td><code>{g.accessCode}</code></td>
+									<td>{g.email}</td>
+									<td>{g.isActive ? 'Oui' : 'Non'}</td>
+									<td>{g.category}</td>
+									<td>
+										<form method="post" action={actions.deleteGroup} style="display:inline">
+											<input type="hidden" name="id" value={g.id} />
+											<button type="submit" class="logout" onclick="return confirm('Supprimer ?')">
+												Supprimer
+											</button>
+										</form>
+									</td>
+								</tr>
+							))}
+							</tbody>
+						</table>
+					</>
+				)
+			}
+		</body>
+	</html>

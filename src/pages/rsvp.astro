@@ -1,0 +1,525 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { actions } from 'astro:actions';
+import { db } from '../db/client';
+import { guest, guestGroup } from '../db/schema';
+import { eq } from 'drizzle-orm';
+
+const group = Astro.locals.group;
+if (!group) {
+	return Astro.redirect('/gate');
+}
+
+const allGuests = await db.select().from(guest).where(eq(guest.groupId, group.id)).all();
+const mainGuests = allGuests.filter((g) => g.isPreFilled);
+const addedGuests = allGuests.filter((g) => !g.isPreFilled);
+
+const result = Astro.getActionResult(actions.submitRsvp);
+const isSubmitted = result?.data?.submitted;
+
+const menuOptions = [
+	{ value: 'adulte', label: 'Adulte (14 ans et plus)' },
+	{ value: 'adolescent', label: 'Adolescent (10 à 14 ans)' },
+	{ value: 'enfant', label: 'Enfant (4 à 10 ans)' },
+	{ value: 'bebe', label: 'Bébé (moins de 4 ans)' },
+] as const;
+
+function parseAllergies(allergies: string | null) {
+	const parts = (allergies || '').split(',').map((s) => s.trim()).filter(Boolean);
+	const set = new Set(parts);
+	return {
+		vegetarien: set.has('Végétarien'),
+		sansgluten: set.has('Sans gluten'),
+		sanslactose: set.has('Sans lactose'),
+		autre: parts.filter((p) => !['Végétarien', 'Sans gluten', 'Sans lactose'].includes(p)).join(', '),
+	};
+}
+
+const cat = group.category || 'A';
+const canDinner = ['A', 'B', 'C'].includes(cat);
+const canBrunch = ['A', 'B'].includes(cat);
+---
+
+<PageLayout title="Confirmer ma présence">
+	<section class="rsvp">
+		<h1>Confirmer votre présence</h1>
+		<p class="intro">
+			{group.name}, merci de répondre pour chaque membre de votre foyer.
+			Vous pourrez revenir modifier votre réponse à tout moment.
+		</p>
+
+		{isSubmitted && (
+			<p class="success">Votre réponse a bien été enregistrée. Merci !</p>
+		)}
+
+		{group.rsvpSubmittedAt && !isSubmitted && (
+			<p class="status">
+				Dernière réponse enregistrée le {new Date(group.rsvpSubmittedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}.
+			</p>
+		)}
+
+		<form method="post" action={actions.submitRsvp} class="rsvp-form" id="rsvp-form">
+			{/* === INVITÉS PRÉ-REMPLIS === */}
+			{mainGuests.map((g) => (() => {
+				const p = `guest_${g.id}`;
+				const a = parseAllergies(g.allergies);
+				return (
+					<fieldset class="rsvp-card" data-guest-prefix={p}>
+						<div class="question stack">
+							<label class="label" for={`${p}_first_name`}>Prénom</label>
+							<input type="text" id={`${p}_first_name`} name={`${p}_first_name`}
+								value={g.firstName} maxlength="100" required />
+						</div>
+						<div class="question stack">
+							<label class="label" for={`${p}_last_name`}>Nom</label>
+							<input type="text" id={`${p}_last_name`} name={`${p}_last_name`}
+								value={g.lastName || ''} maxlength="100" />
+						</div>
+						<div class="question">
+							<span class="label">Sera présent·e à la cérémonie religieuse ?</span>
+							<div class="choices">
+								<label><input type="radio" name={`${p}_ceremony`} value="oui" required checked={g.attendingCeremony === true} /> Oui</label>
+								<label><input type="radio" name={`${p}_ceremony`} value="non" checked={g.attendingCeremony === false} /> Non</label>
+							</div>
+						</div>
+						<div class="question">
+							<span class="label">Sera présent·e au vin d'honneur ?</span>
+							<div class="choices">
+								<label><input type="radio" name={`${p}_cocktail`} value="oui" required checked={g.attendingCocktail === true} /> Oui</label>
+								<label><input type="radio" name={`${p}_cocktail`} value="non" checked={g.attendingCocktail === false} /> Non</label>
+							</div>
+						</div>
+						{canDinner && (
+							<div class="question">
+								<span class="label">Sera présent·e au dîner ?</span>
+								<div class="choices">
+									<label><input type="radio" name={`${p}_dinner`} value="oui" required checked={g.attendingDinner === true} /> Oui</label>
+									<label><input type="radio" name={`${p}_dinner`} value="non" checked={g.attendingDinner === false} /> Non</label>
+								</div>
+							</div>
+						)}
+						{canBrunch && (
+							<div class="question">
+								<span class="label">Sera présent·e au brunch du lendemain ?</span>
+								<div class="choices">
+									<label><input type="radio" name={`${p}_brunch`} value="oui" required checked={g.attendingBrunch === true} /> Oui</label>
+									<label><input type="radio" name={`${p}_brunch`} value="non" checked={g.attendingBrunch === false} /> Non</label>
+								</div>
+							</div>
+						)}
+						{canDinner && (
+							<div class="question">
+								<label class="label" for={`${p}_menu`}>Menu</label>
+								<select id={`${p}_menu`} name={`${p}_menu`}>
+									{menuOptions.map((opt) => (
+										<option value={opt.value} selected={g.menu === opt.value}>{opt.label}</option>
+									))}
+								</select>
+							</div>
+						)}
+						<div class="question">
+							<span class="label">Restrictions alimentaires</span>
+							<div class="choices">
+								<label><input type="checkbox" name={`${p}_allergie_vegetarien`} value="oui" checked={a.vegetarien} /> Végétarien</label>
+								<label><input type="checkbox" name={`${p}_allergie_sansgluten`} value="oui" checked={a.sansgluten} /> Sans gluten</label>
+								<label><input type="checkbox" name={`${p}_allergie_sanslactose`} value="oui" checked={a.sanslactose} /> Sans lactose</label>
+							</div>
+						</div>
+						<div class="question stack">
+							<label class="label" for={`${p}_allergie_autre`}>Autre (précisez)</label>
+							<input type="text" id={`${p}_allergie_autre`} name={`${p}_allergie_autre`}
+								value={a.autre} maxlength="300"
+								placeholder="Aucune" />
+						</div>
+					</fieldset>
+				);
+			})())}
+
+			{/* === INVITÉS AJOUTÉS PRÉCÉDEMMENT === */}
+			{addedGuests.map((g) => (() => {
+				const p = `added_${g.id}`;
+				const a = parseAllergies(g.allergies);
+				return (
+					<fieldset class="rsvp-card is-added" data-guest-prefix={p}>
+						<button type="button" class="delete-btn" data-delete>Supprimer cet invité</button>
+						<div class="question stack">
+							<label class="label" for={`${p}_first_name`}>Prénom</label>
+							<input type="text" id={`${p}_first_name`} name={`${p}_first_name`}
+								value={g.firstName} maxlength="100" required />
+						</div>
+						<div class="question stack">
+							<label class="label" for={`${p}_last_name`}>Nom</label>
+							<input type="text" id={`${p}_last_name`} name={`${p}_last_name`}
+								value={g.lastName || ''} maxlength="100" />
+						</div>
+						<div class="question">
+							<span class="label">Sera présent·e à la cérémonie religieuse ?</span>
+							<div class="choices">
+								<label><input type="radio" name={`${p}_ceremony`} value="oui" required checked={g.attendingCeremony === true} /> Oui</label>
+								<label><input type="radio" name={`${p}_ceremony`} value="non" checked={g.attendingCeremony === false} /> Non</label>
+							</div>
+						</div>
+						<div class="question">
+							<span class="label">Sera présent·e au vin d'honneur ?</span>
+							<div class="choices">
+								<label><input type="radio" name={`${p}_cocktail`} value="oui" required checked={g.attendingCocktail === true} /> Oui</label>
+								<label><input type="radio" name={`${p}_cocktail`} value="non" checked={g.attendingCocktail === false} /> Non</label>
+							</div>
+						</div>
+						{canDinner && (
+							<div class="question">
+								<span class="label">Sera présent·e au dîner ?</span>
+								<div class="choices">
+									<label><input type="radio" name={`${p}_dinner`} value="oui" required checked={g.attendingDinner === true} /> Oui</label>
+									<label><input type="radio" name={`${p}_dinner`} value="non" checked={g.attendingDinner === false} /> Non</label>
+								</div>
+							</div>
+						)}
+						{canBrunch && (
+							<div class="question">
+								<span class="label">Sera présent·e au brunch du lendemain ?</span>
+								<div class="choices">
+									<label><input type="radio" name={`${p}_brunch`} value="oui" required checked={g.attendingBrunch === true} /> Oui</label>
+									<label><input type="radio" name={`${p}_brunch`} value="non" checked={g.attendingBrunch === false} /> Non</label>
+								</div>
+							</div>
+						)}
+						{canDinner && (
+							<div class="question">
+								<label class="label" for={`${p}_menu`}>Menu</label>
+								<select id={`${p}_menu`} name={`${p}_menu`}>
+									{menuOptions.map((opt) => (
+										<option value={opt.value} selected={g.menu === opt.value}>{opt.label}</option>
+									))}
+								</select>
+							</div>
+						)}
+						<div class="question">
+							<span class="label">Restrictions alimentaires</span>
+							<div class="choices">
+								<label><input type="checkbox" name={`${p}_allergie_vegetarien`} value="oui" checked={a.vegetarien} /> Végétarien</label>
+								<label><input type="checkbox" name={`${p}_allergie_sansgluten`} value="oui" checked={a.sansgluten} /> Sans gluten</label>
+								<label><input type="checkbox" name={`${p}_allergie_sanslactose`} value="oui" checked={a.sanslactose} /> Sans lactose</label>
+							</div>
+						</div>
+						<div class="question stack">
+							<label class="label" for={`${p}_allergie_autre`}>Autre (précisez)</label>
+							<input type="text" id={`${p}_allergie_autre`} name={`${p}_allergie_autre`}
+								value={a.autre} maxlength="300"
+								placeholder="Aucune" />
+						</div>
+					</fieldset>
+				);
+			})())}
+
+			{/* === TEMPLATE POUR NOUVEAUX INVITÉS === */}
+			{group.plusOneAllowed && (
+				<template id="new-guest-template">
+					<fieldset class="rsvp-card is-added new-guest" data-guest-prefix="new_XX">
+						<button type="button" class="delete-btn" data-delete>Supprimer cet invité</button>
+						<div class="question stack">
+							<label class="label">Prénom</label>
+							<input type="text" name="new_XX_first_name" maxlength="100" required />
+						</div>
+						<div class="question stack">
+							<label class="label">Nom</label>
+							<input type="text" name="new_XX_last_name" maxlength="100" />
+						</div>
+						<div class="question">
+							<span class="label">Sera présent·e à la cérémonie religieuse ?</span>
+							<div class="choices">
+								<label><input type="radio" name="new_XX_ceremony" value="oui" required /> Oui</label>
+								<label><input type="radio" name="new_XX_ceremony" value="non" /> Non</label>
+							</div>
+						</div>
+						<div class="question">
+							<span class="label">Sera présent·e au vin d'honneur ?</span>
+							<div class="choices">
+								<label><input type="radio" name="new_XX_cocktail" value="oui" required /> Oui</label>
+								<label><input type="radio" name="new_XX_cocktail" value="non" /> Non</label>
+							</div>
+						</div>
+						{canDinner && (
+							<div class="question">
+								<span class="label">Sera présent·e au dîner ?</span>
+								<div class="choices">
+									<label><input type="radio" name="new_XX_dinner" value="oui" required /> Oui</label>
+									<label><input type="radio" name="new_XX_dinner" value="non" /> Non</label>
+								</div>
+							</div>
+						)}
+						{canBrunch && (
+							<div class="question">
+								<span class="label">Sera présent·e au brunch du lendemain ?</span>
+								<div class="choices">
+									<label><input type="radio" name="new_XX_brunch" value="oui" required /> Oui</label>
+									<label><input type="radio" name="new_XX_brunch" value="non" /> Non</label>
+								</div>
+							</div>
+						)}
+						{canDinner && (
+							<div class="question">
+								<label class="label">Menu</label>
+								<select name="new_XX_menu">
+									<option value="adulte" selected>Adulte (14 ans et plus)</option>
+									<option value="adolescent">Adolescent (10 à 14 ans)</option>
+									<option value="enfant">Enfant (4 à 10 ans)</option>
+									<option value="bebe">Bébé (moins de 4 ans)</option>
+								</select>
+							</div>
+						)}
+						<div class="question">
+							<span class="label">Restrictions alimentaires</span>
+							<div class="choices">
+								<label><input type="checkbox" name="new_XX_allergie_vegetarien" value="oui" /> Végétarien</label>
+								<label><input type="checkbox" name="new_XX_allergie_sansgluten" value="oui" /> Sans gluten</label>
+								<label><input type="checkbox" name="new_XX_allergie_sanslactose" value="oui" /> Sans lactose</label>
+							</div>
+						</div>
+						<div class="question stack">
+							<label class="label">Autre (précisez)</label>
+							<input type="text" name="new_XX_allergie_autre" maxlength="300"
+								placeholder="Aucune" />
+						</div>
+					</fieldset>
+				</template>
+			)}
+
+			{group.plusOneAllowed && (
+				<button type="button" class="add-guest-btn" id="add-guest-btn">+ Ajouter un invité</button>
+			)}
+
+			<button type="submit" class="submit">Envoyer notre réponse</button>
+		</form>
+	</section>
+</PageLayout>
+
+<style>
+	.rsvp {
+		max-width: 700px;
+		margin: 0 auto;
+		padding: 2rem 1.5rem 4rem;
+	}
+
+	h1 {
+		font-weight: 300;
+		font-size: 2rem;
+		margin: 0 0 0.5rem;
+		color: var(--color-ink);
+	}
+
+	.intro {
+		margin: 0 0 1.5rem;
+		color: var(--color-muted);
+		font-size: 1rem;
+	}
+
+	.success {
+		background: rgba(71, 102, 111, 0.08);
+		color: var(--color-teal);
+		padding: 0.8rem 1rem;
+		border-radius: 0.35rem;
+		margin: 0 0 1.5rem;
+	}
+
+	.status {
+		color: var(--color-muted);
+		font-size: 0.9rem;
+		margin: 0 0 1.5rem;
+	}
+
+	.rsvp-card {
+		border: 1px solid rgba(47, 42, 38, 0.12);
+		border-radius: 0.5rem;
+		padding: 1.25rem 1.5rem;
+		margin: 0 0 1.25rem;
+		background: #fff;
+		position: relative;
+	}
+
+	.rsvp-card.is-added {
+		border-color: rgba(71, 102, 111, 0.25);
+	}
+
+	.delete-btn {
+		display: block;
+		margin: 0 0 0.75rem auto;
+		padding: 0.25rem 0.6rem;
+		font-size: 0.8rem;
+		color: #a94442;
+		background: none;
+		border: 1px solid rgba(169, 68, 66, 0.3);
+		border-radius: 0.3rem;
+		cursor: pointer;
+		font-family: inherit;
+	}
+
+	.delete-btn:hover {
+		background: rgba(169, 68, 66, 0.06);
+	}
+
+	.question {
+		margin: 0 0 1rem;
+	}
+
+	.question:last-child {
+		margin-bottom: 0;
+	}
+
+	.label {
+		display: block;
+		margin-bottom: 0.4rem;
+		font-size: 0.9rem;
+		color: var(--color-ink);
+		font-weight: 500;
+	}
+
+	.choices {
+		display: flex;
+		gap: 1.25rem;
+		flex-wrap: wrap;
+	}
+
+	.choices label {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		font-size: 0.95rem;
+		cursor: pointer;
+		color: var(--color-ink);
+	}
+
+	input[type="radio"] {
+		width: 1.15rem;
+		height: 1.15rem;
+		accent-color: var(--color-teal);
+		cursor: pointer;
+	}
+
+	select,
+	input[type="text"] {
+		width: 100%;
+		padding: 0.6rem 0.75rem;
+		font-size: 1rem;
+		border: 1px solid rgba(47, 42, 38, 0.2);
+		border-radius: 0.35rem;
+		background: #fff;
+		color: var(--color-ink);
+		font-family: inherit;
+	}
+
+	select:focus,
+	input[type="text"]:focus {
+		outline: 2px solid var(--color-teal);
+		outline-offset: 2px;
+		border-color: var(--color-teal);
+	}
+
+	.stack {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.add-guest-btn {
+		display: block;
+		width: 100%;
+		padding: 0.7rem;
+		font-size: 1rem;
+		background: transparent;
+		color: var(--color-teal);
+		border: 1.5px dashed var(--color-teal);
+		border-radius: 0.35rem;
+		cursor: pointer;
+		font-family: inherit;
+		margin: 0 0 1.25rem;
+	}
+
+	.add-guest-btn:hover {
+		background: rgba(71, 102, 111, 0.04);
+	}
+
+	.submit {
+		display: block;
+		width: 100%;
+		padding: 0.85rem;
+		font-size: 1rem;
+		background: var(--color-teal);
+		color: #fff;
+		border: none;
+		border-radius: 0.35rem;
+		cursor: pointer;
+		font-family: inherit;
+		margin-top: 0.5rem;
+	}
+
+	.submit:hover {
+		background: var(--color-teal-dark);
+	}
+
+	.is-disabled {
+		opacity: 0.45;
+		pointer-events: none;
+	}
+
+	@media (max-width: 600px) {
+		.rsvp {
+			padding: 1.5rem 1rem 3rem;
+		}
+
+		.rsvp-card {
+			padding: 1rem;
+		}
+	}
+</style>
+
+<script>
+	function bindYesNo(radioName: string, control: HTMLElement | null) {
+		if (!control) return;
+		const radios = document.querySelectorAll<HTMLInputElement>(`input[name="${radioName}"]`);
+		if (!radios.length) return;
+		function update() {
+			const checked = document.querySelector<HTMLInputElement>(`input[name="${radioName}"]:checked`);
+			const enabled = !checked || checked.value === 'oui';
+			control.querySelectorAll<HTMLInputElement | HTMLSelectElement>('input, select').forEach((el) => {
+				el.disabled = !enabled;
+			});
+			control.classList.toggle('is-disabled', !enabled);
+		}
+		radios.forEach((r) => r.addEventListener('change', update));
+		update();
+	}
+
+	function initCard(fieldset: HTMLElement) {
+		const prefix = fieldset.dataset.guestPrefix;
+		if (!prefix) return;
+		const menuWrap = fieldset.querySelector<HTMLElement>(`select[name="${prefix}_menu"]`)?.closest('.question');
+		if (menuWrap) bindYesNo(`${prefix}_dinner`, menuWrap);
+	}
+
+	document.querySelectorAll<HTMLElement>('[data-guest-prefix]').forEach(initCard);
+
+	// Suppression
+	document.addEventListener('click', (e) => {
+		const btn = (e.target as HTMLElement).closest('[data-delete]');
+		if (!btn) return;
+		const fieldset = btn.closest('fieldset');
+		if (fieldset) fieldset.remove();
+	});
+
+	// Ajout
+	const addBtn = document.getElementById('add-guest-btn');
+	const tmpl = document.getElementById('new-guest-template') as HTMLTemplateElement | null;
+	const form = document.getElementById('rsvp-form');
+	if (addBtn && tmpl && form) {
+		addBtn.addEventListener('click', () => {
+			const idx = Date.now();
+			const html = tmpl.innerHTML.replace(/new_XX/g, `new_${idx}`);
+			const wrap = document.createElement('div');
+			wrap.innerHTML = html;
+			const fieldset = wrap.querySelector('fieldset');
+			if (!fieldset) return;
+			form.insertBefore(fieldset, addBtn);
+			initCard(fieldset);
+		});
+	}
+</script>

@@ -1,0 +1,1 @@
+ALTER TABLE guest_group ADD COLUMN category TEXT DEFAULT 'A' NOT NULL;

@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import SiteNav from '../components/SiteNav.astro';
 import { site } from '../data/site';
+
+const group = Astro.locals.group;
 ---
 
 <Layout>
@@ -12,14 +14,12 @@ import { site } from '../data/site';
 	<section class="hero">
 		<div class="hero-panel">
 			<h1>{site.nameLines[0]}<br />{site.nameLines[1]}</h1>
-			<p class="subtitle">{site.subtitle}</p>
 			<p class="date">{site.date}</p>
+			{group && <p class="greeting">Bienvenue sur notre site de mariage !</p>}
+			<p class="subtitle">{site.subtitle}</p>
 		</div>
 		<div class="hero-media" role="img" aria-label={site.name}>
 			<span>Photo à venir</span>
-		</div>
-		<div class="hero-photo" role="img" aria-label="Photo des mariés">
-			<span>Photo des mariés à venir</span>
 		</div>
 	</section>
 </Layout>
@@ -40,32 +40,11 @@ import { site } from '../data/site';
 		align-items: stretch;
 	}
 
-	.hero-photo {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		z-index: 2;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: min(420px, 55vw);
-		aspect-ratio: 4 / 5;
-		background: #cdbfae;
-		border: 8px solid var(--color-cream);
-		color: var(--color-muted);
-		font-size: 0.8rem;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		text-align: center;
-		padding: 1rem;
-	}
-
 	.hero-panel {
 		position: relative;
 		overflow: hidden;
-		background: var(--color-teal);
-		color: #fff;
+		background: var(--color-dusty-denim);
+		color: #060627;
 		padding: 6rem 3rem;
 		aspect-ratio: 1 / 1;
 		display: flex;
@@ -112,8 +91,8 @@ import { site } from '../data/site';
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: #e6ded4;
-		color: var(--color-muted);
+		background: #ede7d9;
+		color: var(--color-dusty-denim);
 		font-size: 0.9rem;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
@@ -138,17 +117,6 @@ import { site } from '../data/site';
 			order: 3;
 			aspect-ratio: 1 / 1;
 		}
-
-		.hero-photo {
-			position: relative;
-			top: auto;
-			left: auto;
-			transform: none;
-			order: 2;
-			width: min(300px, 68vw);
-			margin: -80px auto -80px;
-			border-width: 6px;
-		}
 	}
 
 	@media (max-width: 420px) {
@@ -159,10 +127,12 @@ import { site } from '../data/site';
 		.subtitle {
 			font-size: 1rem;
 		}
-
-		.hero-photo {
-			width: min(260px, 72vw);
-			margin: -64px auto -64px;
-		}
+	}
+	.greeting {
+		margin: 0 0 0.5rem;
+		font-size: 1.1rem;
+		font-weight: 500;
+		color: #060627;
+		opacity: 0.9;
 	}
 </style>

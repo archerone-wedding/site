@@ -3,12 +3,13 @@ export const site = {
 	/** Name split per line for the landing hero heading. */
 	nameLines: ["Tiffany", "Charles"],
 	date: "Samedi 29 mai 2027",
-	subtitle: "Bienvenue sur notre site de mariage ! Vous trouverez ici toutes les informations pour préparer cette journée. Nous vous remercions de bien vouloir confirmer votre présence via ce formulaire avant le 29 janvier 2027.",
+	subtitle: "Vous trouverez ici toutes les informations pour préparer cette journée. Nous vous remercions de bien vouloir confirmer votre présence via ce formulaire avant le 29 janvier 2027.",
 } as const;
 
 export interface NavItem {
 	label: string;
-	href: string;
+	href?: string;
+	children?: readonly NavItem[];
 }
 
 /**
@@ -17,8 +18,14 @@ export interface NavItem {
  */
 export const navItems: readonly NavItem[] = [
 	{ label: "Programme", href: "/le-mariage" },
-	{ label: "Accès", href: "/itineraire" },
-	{ label: "Nous contacter", href: "/contact" },
-	{ label: "Informations légales", href: "/legad" },
-	{ label: "Logements", href: "/logement" },
+	{ label: "Confirmer ma présence", href: "/rsvp" },
+	{
+		label: "Préparatifs",
+		children: [
+			{ label: "Accès", href: "/itineraire" },
+			{ label: "Logements", href: "/logement" },
+			{ label: "Informations légales", href: "/legad" },
+			{ label: "Nous contacter", href: "/contact" },
+		],
+	},
 ];

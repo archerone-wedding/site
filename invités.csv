@@ -1,0 +1,147 @@
+﻿Prénom;Nom;prérempli;Âge;Numéro Groupe;plusOne;Logements domaine;Catégorie
+Christian;Harvel;1;A;1;;1;A
+Prisca;Harvel;1;A;1;;1;A
+Lauriane;Harvel;1;A;2;;1;A
+Lisa;Do Nascimento;1;A;3;;1;A
+Louis;Touzeau;1;A;3;;1;A
+Lucas;Touzeau;0;B;3;1;0;A
+Zoé;Clergue;1;A;4;;0;B
+Valentin;Buronfosse;1;A;4;;0;B
+Agathe;Peplinski;1;A;5;;0;B
+Nicolas;Hennetier;1;A;6;;0;B
+Delphine;Gras;1;A;6;;0;B
+Hicham;El Boukkouri;1;A;7;;0;B
+Sophie;El Boukkouri - Vialatel;1;A;7;;0;B
+Alexandre;Sevin;1;A;8;;0;B
+Gabrielle;Evain;1;A;8;;0;B
+Benoit;Choffin;1;A;9;;0;B
+Joseph;Lam;1;A;10;;0;B
+Elodie;Weil;1;A;10;;0;B
+Gabriel;Lam;0;E;10;1;0;B
+Mathis;Oliva;1;A;11;;0;B
+Silvia;Rizzotto;1;A;11;;0;B
+Lucas;Ben Hassen;1;A;12;;0;B
+Claire;nom de famille;1;A;12;;0;B
+Louisa;Ben Hassen;0;E;12;1;0;B
+Thibault;Faye;1;A;13;;1;B
+Maxime;Labelle;1;A;14;;1;A
+Clémence;Labelle;1;A;14;;1;A
+Aure;Labelle;1;A;15;;1;A
+Florentin;Labelle;1;A;16;;1;A
+Julie;nom de famille;0;A;16;1;1;B
+Sévrine;de Cazenove;1;A;17;;0;D
+Julie;de Plinval;1;A;18;;0;C
+Xavier;de Plinval;1;A;18;;0;C
+Hector;de Plinval;1;A;18;;0;C
+Valentin;de Plinval;1;A;18;;0;C
+Ariane;de Plinval;1;A;19;;0;C
+George;de Plinval;1;A;20;;0;C
+Elodie;Payet-Gaspard;1;A;21;;0;C
+Alice;Payet-Gaspard;1;A;21;;0;C
+Hélène;Payet-Gaspard;1;T;21;;0;C
+Fleur;Payet-Gaspard;1;E;21;;0;C
+Mathieu;Payet-Gaspard;1;A;21;;0;C
+Vincent;Labelle;1;A;22;;0;D
+Dominique;Pilois;1;A;22;;0;D
+Albin;Labelle;1;A;23;;0;C
+Edouard;Labelle;1;A;24;;0;C
+Anne-Laure;Labelle;1;A;24;;0;C
+Hadrien;Labelle;1;A;24;;0;C
+Ambre;Labelle;1;T;24;;0;C
+Florence;Labelle;1;A;25;;0;D
+Quentin;Labelle;1;A;25;;0;B
+Marine;Labelle;1;A;25;;0;B
+Guillaume;Louit;1;A;26;;0;B
+Yukari;Shigeta;1;A;26;;0;B
+Keigo;Louit - Shigeta;1;A;26;;0;B
+Hugo;Louit - Shigeta;1;E;26;;0;B
+Julie;Louit - Shigeta;1;E;26;;0;B
+Aina;Louit - Shigeta;1;B;26;;0;B
+Eleonore;Bambury;1;A;27;;0;C
+Joseph;nom de famille;1;A;27;;0;C
+Alice;Bambury;1;A;28;;0;C
+Matthieu;Hémeury;1;A;29;;0;C
+Marie;Hémeury;1;A;29;;0;C
+Joseph;Hémeury;1;E;29;;0;C
+Sybille;Hémeury;1;B;29;;0;C
+Thomas;de Parseval;1;A;30;;0;C
+Pauline;de Parseval;1;A;30;;0;C
+prénom;de Parseval;1;B;30;;0;C
+Niklas;Prohn;1;A;31;;1;B
+Amaury;Chopineaux;1;A;32;;1;A
+Nikola;nom de famille;1;A;32;;1;A
+Valentin;Claudel;1;A;33;;0;B
+Julien;Cosson;1;A;34;;0;B
+Lancelot;Godefroy;1;A;35;;0;B
+Rachelle;Henner;1;A;36;;0;B
+Benjamin;nom de famille;1;A;36;;0;B
+Agnes;Doué;1;A;37;;0;B
+Antoine;nom de famille;1;A;37;;0;B
+Lauriane;Teyssier;1;A;38;;0;B
+Jop;Zitman;1;A;38;;0;B
+Emilien;Decaux;1;A;39;;0;B
+Cécile;Dupuis-Remond;1;A;40;;0;B
+Clara;Dufay;1;A;41;;0;B
+Louis-Marie;nom de famille;0;A;41;1;0;B
+Albin;Louit;1;A;42;;0;C
+Flore;Louit;1;A;42;;0;C
+Thomas;Louit;1;E;42;;0;C
+Celeste;Louit;1;E;42;;0;C
+Prénom;Louit;1;E;42;;0;C
+Helena;Vicario;1;A;43;;1;B
+Antoine;Vicario;1;A;43;;1;B
+Gabriel;Vicario;0;E;43;1;1;B
+Thomas;Lozano;1;A;44;;0;B
+Gamzegül;Ucur;1;A;44;;0;B
+Bastien;Vallée;1;A;45;;0;B
+Anne-Claire;Vallée;1;A;45;;0;B
+prénom;Vallée;0;E;45;1;0;B
+prénom;Vallée;0;E;45;1;0;B
+prénom;Vallée;0;B;45;1;0;B
+Maxence;Chaigneau;1;A;46;;0;B
+Geneviève;Toubol;1;A;47;;0;B
+Coline;Fouché;1;A;48;;0;B
+Helwan;Boumaraf;1;A;48;;0;B
+Antoine;Gelloz;1;A;49;;0;B
+Sevann;Nazz;1;A;50;;0;B
+Maira;nom de famille;1;A;50;;0;B
+Fatou;Kiné N'Doye;1;A;51;;1;B
+Jean-Baptiste;Labelle;1;A;52;;0;C
+Constance;Labelle;1;A;52;;0;C
+Donatien;Labelle;1;A;52;;0;C
+Astrid;Labelle;1;A;52;;0;C
+Ambroise;Labelle;1;A;53;;0;C
+Jeanne;Arnoux;1;A;54;;0;C
+Gustave;Arnoux;1;E;54;;0;C
+Hortense;Bambury;1;A;55;;0;D
+Mark;Bambury;1;A;55;;0;D
+Henry;Bambury;1;A;56;;0;C
+Marine;Oriot;1;A;57;;0;B
+Fiona;Lecourt;1;A;58;;0;B
+Eliot;Kupferberg;1;A;59;;0;B
+Esther;Kranefeld;1;A;59;;0;B
+Thomas;Richard;1;A;60;;0;B
+Alexandre;Veyrat-Masson;1;A;61;;0;B
+Elouan;Ricois;1;A;62;;0;C
+Claire;Schricke-Amiri;1;A;62;;0;C
+Sophia;Wallace-Turner;1;A;63;;0;B
+Isabella;Wallace-Turner;1;A;63;;0;B
+Nicolas;Miranda;1;A;64;;0;B
+Evan;Kerguen;1;A;65;;0;B
+Rozenn;Audinet;1;A;66;;0;B
+Clémence;Huyghues Despointes;1;A;67;;0;C
+François;Sabatier;1;A;67;;0;C
+Arnaud ;Falcone;1;A;68;;0;B
+Gabriel;Leroux;1;A;69;;0;C
+Mathilde;Leroux;1;A;69;;0;C
+Thibault;Kaczmarek;1;A;70;;0;C
+Lucie;Kaczmarek;1;A;70;;0;C
+Kim;Lasvignes;1;A;71;;0;C
+prénom;nom de famille;0;A;71;1;0;C
+Jade;Lasvignes;1;A;72;;0;C
+Anh-Lys;Ravaine;1;A;73;;0;B
+Anatole;Lefèvre;1;A;74;;0;B
+Tristan;Lescofit;1;A;75;;0;B
+Robin;Beuraud;1;A;76;;0;B
+Marion;Briquet Mosalo;1;A;76;;0;B
+Gauthier;Bertin;1;A;77;;0;B

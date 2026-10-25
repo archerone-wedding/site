@@ -1,0 +1,346 @@
+<div class="program-content">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Le programme de notre mariage</title>
+
+  <style>
+    :root {
+      --navy: #17496c;
+      --blue: #8bb9cf;
+      --gold: #b58a54;
+      --cream: #fcfaf5;
+      --text: #24465e;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--text);
+      font-family: Georgia, serif;
+    }
+
+    header {
+      text-align: center;
+      padding: 55px 20px 35px;
+      background: linear-gradient(#edf5f8, var(--cream));
+    }
+
+    header h1 {
+      margin: 0;
+      color: var(--navy);
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      font-weight: normal;
+      font-style: italic;
+    }
+
+    header p {
+      font-style: italic;
+      letter-spacing: 1px;
+    }
+
+    .programme {
+      position: relative;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 30px 20px 70px;
+    }
+
+    /* Corde centrale */
+    .programme::before {
+      content: "";
+      position: absolute;
+      top: 100px;
+      bottom: 40px;
+      left: 50%;
+      width: 10px;
+      transform: translateX(-50%);
+      border-radius: 8px;
+      background: repeating-linear-gradient(
+        45deg,
+        #c9a576 0 3px,
+        #f0d7ad 3px 6px,
+        #ad804d 6px 8px
+      );
+      box-shadow: 0 0 0 2px #f9f0df;
+    }
+
+    /* Proue du navire */
+    .proue {
+      position: relative;
+      z-index: 2;
+      width: 0;
+      height: 0;
+      margin: 0 auto 65px;
+      border-left: 42px solid transparent;
+      border-right: 42px solid transparent;
+      border-top: 78px solid var(--navy);
+      filter: drop-shadow(0 4px 2px #b7c9d1);
+    }
+
+    .proue::before {
+      content: "";
+      position: absolute;
+      top: -76px;
+      left: -1px;
+      height: 40px;
+      border-left: 2px solid var(--gold);
+    }
+
+    .lieu {
+      position: relative;
+      margin-bottom: 45px;
+    }
+
+    .lieu h2 {
+      color: var(--navy);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 1.25rem;
+      font-weight: normal;
+      margin: 0 0 8px;
+    }
+
+    .lieu .adresse {
+      text-align: center;
+      font-style: italic;
+      margin: 0 0 35px;
+      color: #607c8d;
+    }
+
+    .date {
+      position: relative;
+      margin-bottom: 50px;
+    }
+
+    .date .jour {
+      text-align: center;
+      color: var(--navy);
+      font-size: 1.6rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin: 0 auto 35px;
+      padding: 14px 24px;
+      max-width: 320px;
+      background: rgba(23, 73, 108, 0.08);
+      border-radius: 8px;
+      font-weight: normal;
+      position: relative;
+      z-index: 2;
+    }
+
+    .activite {
+      position: relative;
+      width: 50%;
+      padding: 0 55px 35px 10px;
+      text-align: right;
+    }
+
+    .activite.droite {
+      margin-left: 50%;
+      padding: 0 10px 35px 55px;
+      text-align: left;
+    }
+
+    /* Repère rond sur la corde */
+    .activite::after {
+      content: attr(data-icone);
+      position: absolute;
+      top: 0;
+      right: -23px;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--navy);
+      border-radius: 50%;
+      background: var(--cream);
+      color: var(--navy);
+      font-size: 1.25rem;
+      z-index: 2;
+    }
+
+    .activite.droite::after {
+      right: auto;
+      left: -23px;
+    }
+
+    .heure {
+      display: block;
+      color: var(--navy);
+      font-size: 1.6rem;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+
+    .activite h3 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+    }
+
+    .activite p {
+      margin: 0;
+      line-height: 1.6;
+      font-style: italic;
+    }
+
+    footer {
+      text-align: center;
+      padding: 35px 20px 55px;
+      color: var(--navy);
+      font-size: 1.5rem;
+      font-style: italic;
+    }
+
+    @media (max-width: 600px) {
+      .programme {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .programme::before {
+        left: 27px;
+      }
+
+      .proue {
+        margin-left: 0;
+        transform: translateX(-20px) scale(.8);
+        margin-bottom: 35px;
+      }
+
+      .lieu h2,
+      .lieu .adresse {
+        text-align: left;
+        padding-left: 48px;
+      }
+
+      .date .jour {
+        text-align: left;
+        margin-left: 48px;
+        margin-right: 0;
+        padding: 10px 18px;
+        font-size: 1.3rem;
+        max-width: none;
+        display: inline-block;
+      }
+
+      .activite,
+      .activite.droite {
+        width: 100%;
+        margin-left: 0;
+        padding: 0 8px 32px 65px;
+        text-align: left;
+      }
+
+      .activite::after,
+      .activite.droite::after {
+        left: 5px;
+        right: auto;
+        width: 38px;
+        height: 38px;
+      }
+
+      .heure { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Notre Mariage</h1>
+    <p>LE PROGRAMME · Deux lieux, une même aventure</p>
+  </header>
+
+  <main class="programme">
+
+    <!-- La proue du navire -->
+    <div class="proue" aria-label="Proue du navire"></div>
+
+    <!-- VENDREDI -->
+    <section class="date">
+      <h2 class="jour">Vendredi</h2>
+
+      <!-- LIEU 1 -->
+      <section class="lieu">
+        <h2>Mairie de Suresnes</h2>
+
+        <article class="activite" data-icone="♡">
+          <time class="heure">15h00</time>
+          <h3>Mariage civil</h3>
+        </article>
+      </section>
+
+      <!-- LIEU 2 -->
+      <section class="lieu">
+        <h2>Restaurant Pré St-Germain, Louviers</h2>
+
+        <article class="activite droite" data-icone="♡">
+          <time class="heure">19h30</time>
+          <h3>Dîner avec les témoins</h3>
+        </article>
+      </section>
+    </section>
+
+    <!-- SAMEDI -->
+    <section class="date">
+      <h2 class="jour">Samedi</h2>
+
+      <!-- LIEU 3 -->
+      <section class="lieu">
+        <h2>Église Notre-Dame de Tourny</h2>
+
+        <article class="activite" data-icone="♡">
+          <time class="heure">15h30</time>
+          <h3>Culte</h3>
+        </article>
+      </section>
+
+      <!-- LIEU 4 -->
+      <section class="lieu">
+        <h2>Château du Chesnay-Haguest</h2>
+
+        <article class="activite" data-icone="♧">
+          <time class="heure">18h00</time>
+          <h3>Vin d'honneur</h3>
+        </article>
+
+        <article class="activite droite" data-icone="♬">
+          <time class="heure">20h00</time>
+          <h3>Dîner</h3>
+        </article>
+
+        <article class="activite" data-icone="✦">
+          <time class="heure">23h00</time>
+          <h3>Soirée dansante</h3>
+          <p>Fin de la soirée à 03h00</p>
+        </article>
+      </section>
+    </section>
+
+    <!-- DIMANCHE -->
+    <section class="date">
+      <h2 class="jour">Dimanche</h2>
+
+      <section class="lieu">
+        <h2>Château du Chesnay-Haguest</h2>
+
+        <article class="activite" data-icone="☕">
+          <time class="heure">10h00</time>
+          <h3>Brunch</h3>
+        </article>
+      </section>
+    </section>
+
+
+  </main>
+
+  <footer>
+    Deux lieux, une seule direction : l'amour.
+    <div>〰 〰 〰</div>
+  </footer>
+</body>
+
+</div>
