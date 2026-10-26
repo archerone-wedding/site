@@ -45,7 +45,7 @@ const group = Astro.locals.group;
 								)}
 							</a>
 						) : (
-							<button type="button" class="nav-trigger">
+							<button type="button" class="nav-trigger" data-submenu-toggle aria-expanded="false">
 								{item.label}
 								{item.children && (
 									<span class="caret" aria-hidden="true">▾</span>
@@ -138,7 +138,7 @@ const group = Astro.locals.group;
 		border: none;
 		cursor: pointer;
 		margin-left: auto;
-		z-index: 2;
+		z-index: 102;
 	}
 
 	.nav-toggle__bar {
@@ -311,16 +311,23 @@ const group = Astro.locals.group;
 			display: flex;
 		}
 
+		.site-nav.is-menu-open .site-nav__brand {
+			display: none;
+		}
+
 		.site-nav__menu {
 			display: none;
-			order: 3;
-			width: 100%;
-			padding-top: 0.5rem;
-			margin-top: 0.5rem;
-			border-top: 1px solid rgba(255, 255, 255, 0.1);
+			position: fixed;
+			inset: 0;
+			width: 100vw;
+			height: 100vh;
+			background: rgba(45, 74, 111, 0.95);
+			z-index: 101;
+			padding: 5rem 2rem 2rem;
 			flex-direction: column;
-			align-items: flex-start;
-			gap: 0.5rem;
+			align-items: center;
+			justify-content: center;
+			gap: 1.5rem;
 		}
 
 		.site-nav__menu.is-open {
@@ -329,20 +336,23 @@ const group = Astro.locals.group;
 
 		.site-nav__links {
 			flex-direction: column;
-			gap: 0.35rem;
+			align-items: center;
+			gap: 1rem;
 		}
 
 		.site-nav__links > li > a,
 		.site-nav__links > li > .nav-trigger {
-			font-size: 0.95rem;
-			padding: 0.35rem 0;
+			font-size: 1.15rem;
+			padding: 0.4rem 0;
+			justify-content: center;
 		}
 
 		.site-nav__user {
 			margin-left: 0;
-			padding-top: 0.35rem;
-			border-top: 1px solid rgba(255, 255, 255, 0.08);
+			padding-top: 1rem;
+			border-top: 1px solid rgba(255, 255, 255, 0.12);
 			width: 100%;
+			justify-content: center;
 		}
 
 		.submenu {
@@ -351,19 +361,36 @@ const group = Astro.locals.group;
 			box-shadow: none;
 			border: none;
 			background: transparent;
-			padding: 0.1rem 0 0 0.75rem;
-			opacity: 1;
-			visibility: visible;
-			pointer-events: auto;
+			padding: 0.5rem 0 0 0;
+			display: none;
+			text-align: center;
+		}
+
+		.submenu.is-open {
+			display: block;
+		}
+
+		.submenu li {
+			text-align: center;
 		}
 
 		.submenu a {
-			padding: 0.25rem 0;
-			font-size: 0.85rem;
+			padding: 0.35rem 0;
+			font-size: 0.9rem;
 		}
 
+		/* Caret / triangle inversé en mobile */
 		.caret {
-			display: none;
+			font-size: 0.75rem;
+			margin-left: 0.4rem;
+			opacity: 0.7;
+			transition: transform 200ms ease;
+			display: inline-block;
+		}
+
+		.nav-trigger[aria-expanded="true"] .caret,
+		[data-submenu-toggle].is-open .caret {
+			transform: rotate(180deg);
 		}
 	}
 
@@ -382,13 +409,30 @@ const group = Astro.locals.group;
 <script>
 	const toggle = document.querySelector('[data-nav-toggle]') as HTMLButtonElement | null;
 	const menu = document.getElementById('site-nav-menu');
+	const nav = document.querySelector('.site-nav');
 	if (toggle && menu) {
 		toggle.addEventListener('click', () => {
 			const isOpen = menu.classList.toggle('is-open');
 			toggle.classList.toggle('is-open', isOpen);
+			if (nav) nav.classList.toggle('is-menu-open', isOpen);
 			toggle.setAttribute('aria-expanded', String(isOpen));
+			document.body.style.overflow = isOpen ? 'hidden' : '';
 			const bars = toggle.querySelectorAll('.nav-toggle__bar');
 			bars.forEach((bar) => bar.classList.toggle('is-open', isOpen));
 		});
 	}
+
+	// Accordéon sous-menus (mobile)
+	document.querySelectorAll<HTMLElement>('[data-submenu-toggle]').forEach((btn) => {
+		btn.addEventListener('click', () => {
+			const parent = btn.closest('li');
+			if (!parent) return;
+			const submenu = parent.querySelector<HTMLElement>('.submenu');
+			if (!submenu) return;
+			submenu.classList.toggle('is-open');
+			btn.classList.toggle('is-open');
+			const isExpanded = btn.classList.contains('is-open');
+			btn.setAttribute('aria-expanded', String(isExpanded));
+		});
+	});
 </script>

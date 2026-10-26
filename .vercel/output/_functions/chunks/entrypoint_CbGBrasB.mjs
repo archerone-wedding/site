@@ -1,6 +1,6 @@
-import { S as ActionError, t as defineAction } from "./server_NC_KJwA0.mjs";
+import { S as ActionError, t as defineAction } from "./server_jmpw4w3n.mjs";
 import { n as guestGroup, r as db, t as guest } from "./schema_CSUjTRWR.mjs";
-import "./_astro_actions_BRoQ1mWB.mjs";
+import "./_astro_actions_CpJCHj5k.mjs";
 import * as mod from "zod/v4";
 import { eq } from "drizzle-orm";
 // src/actions/index.ts
@@ -94,7 +94,7 @@ var server = {
 		input: mod.object({}),
 		handler: async (_input, context) => {
 			context.cookies.delete("wedding_group", { path: "/" });
-			return { success: true };
+			return context.redirect("/gate");
 		}
 	}),
 	submitRsvp: defineAction({

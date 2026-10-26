@@ -115,7 +115,7 @@ export const server = {
 		input: z.object({}),
 		handler: async (_input, context) => {
 			context.cookies.delete('wedding_group', { path: '/' });
-			return { success: true };
+			return context.redirect('/gate');
 		},
 	}),
 

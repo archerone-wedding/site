@@ -2,7 +2,7 @@ import { t as __exportAll } from "./rolldown-runtime_D8jQpDG7.mjs";
 import { E as renderComponent, M as renderTemplate, N as maybeRenderHead } from "./sequence_DKkBVb9G.mjs";
 import { n as createComponent } from "./compiler_B21378Bx.mjs";
 import { n as site } from "./site_KPf2B4Rz.mjs";
-import { t as $$PageLayout } from "./PageLayout_CTg47sDt.mjs";
+import { t as $$PageLayout } from "./PageLayout_B8R2Jq7U.mjs";
 import { a as contact } from "./wedding_Bn4MUFfi.mjs";
 // src/pages/contact.astro
 var contact_exports = /* @__PURE__ */ __exportAll({
