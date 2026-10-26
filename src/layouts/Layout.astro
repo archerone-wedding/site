@@ -19,10 +19,13 @@ const {
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="viewport" content="width=device-width" />
-		<meta name="theme-color" content="#060627" />
+		<meta name="theme-color" content="#2D4A6F" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
 		<title>{title}</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Great+Vibes&display=swap" rel="stylesheet">
 	</head>
 	<body>
 		<slot name="header" />
@@ -39,10 +42,28 @@ const {
 
 <style>
 	:root {
-		--color-prussian-blue: #060627;
-		--color-goldenrod: #d5A021;
-		--color-soft-linen: #ede7d9;
-		--color-dusty-denim: #6c91c2;
+		/* Couleurs inspirées du PDF */
+		--color-navy: #2D4A6F;
+		--color-slate-blue: #6B8CAE;
+		--color-cream: #F8F2E8;
+		--color-brown: #5C4A3D;
+		--color-navy-text: #2D4A6F;
+		--color-gold-accent: #b58a54;
+		--color-white: #FFFFFF;
+
+		/* Aliases compatibilité */
+		--color-prussian-blue: #2D4A6F;
+		--color-goldenrod: #b58a54;
+		--color-soft-linen: #F8F2E8;
+		--color-dusty-denim: #6B8CAE;
+		--color-ink: #5C4A3D;
+		--color-muted: #7a6b5f;
+		--color-teal: #6B8CAE;
+
+		/* Typographie */
+		--font-serif: 'Bodoni Moda', 'Bodoni Old Style', 'Bodoni MT', 'Didot', Georgia, serif;
+		--font-script: 'Great Vibes', 'Brush Script MT', cursive;
+		--font-body: 'Bodoni Moda', Georgia, serif;
 	}
 
 	* {
@@ -76,20 +97,21 @@ const {
 		display: flex;
 		flex-direction: column;
 		background: var(--color-cream);
-		color: var(--color-ink);
-		font-family:
-			'Helvetica Neue', Helvetica, Arial, ui-sans-serif, system-ui,
-			sans-serif;
-		line-height: 1.5;
+		color: var(--color-brown);
+		font-family: var(--font-body);
+		font-size: 1.05rem;
+		line-height: 1.6;
 	}
 
 	main {
 		flex: 1;
 	}
 	.site-footer {
-		padding: 2rem 1.5rem;
+		padding: 1.75rem 1.5rem;
 		text-align: center;
-		color: var(--color-muted);
-		font-size: 0.85rem;
+		background: var(--color-slate-blue);
+		color: var(--color-white);
+		font-size: 0.9rem;
+		font-family: var(--font-serif);
 	}
 </style>

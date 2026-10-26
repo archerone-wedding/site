@@ -43,6 +43,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 <PageLayout title="Confirmer ma présence">
 	<section class="rsvp">
 		<h1>Confirmer votre présence</h1>
+		<div class="section-separator"></div>
 		<p class="intro">
 			{group.name}, merci de répondre pour chaque membre de votre foyer.
 			Vous pourrez revenir modifier votre réponse à tout moment.
@@ -123,13 +124,12 @@ const canBrunch = ['A', 'B'].includes(cat);
 								<label><input type="checkbox" name={`${p}_allergie_vegetarien`} value="oui" checked={a.vegetarien} /> Végétarien</label>
 								<label><input type="checkbox" name={`${p}_allergie_sansgluten`} value="oui" checked={a.sansgluten} /> Sans gluten</label>
 								<label><input type="checkbox" name={`${p}_allergie_sanslactose`} value="oui" checked={a.sanslactose} /> Sans lactose</label>
+								<label class="autre-choice">
+									<input type="checkbox" class="autre-cb" checked={a.autre !== ''} />
+									<span>Autre</span>
+									<input type="text" name={`${p}_allergie_autre`} value={a.autre} maxlength="300" placeholder="Précisez..." />
+								</label>
 							</div>
-						</div>
-						<div class="question stack">
-							<label class="label" for={`${p}_allergie_autre`}>Autre (précisez)</label>
-							<input type="text" id={`${p}_allergie_autre`} name={`${p}_allergie_autre`}
-								value={a.autre} maxlength="300"
-								placeholder="Aucune" />
 						</div>
 					</fieldset>
 				);
@@ -200,13 +200,12 @@ const canBrunch = ['A', 'B'].includes(cat);
 								<label><input type="checkbox" name={`${p}_allergie_vegetarien`} value="oui" checked={a.vegetarien} /> Végétarien</label>
 								<label><input type="checkbox" name={`${p}_allergie_sansgluten`} value="oui" checked={a.sansgluten} /> Sans gluten</label>
 								<label><input type="checkbox" name={`${p}_allergie_sanslactose`} value="oui" checked={a.sanslactose} /> Sans lactose</label>
+								<label class="autre-choice">
+									<input type="checkbox" class="autre-cb" checked={a.autre !== ''} />
+									<span>Autre</span>
+									<input type="text" name={`${p}_allergie_autre`} value={a.autre} maxlength="300" placeholder="Précisez..." />
+								</label>
 							</div>
-						</div>
-						<div class="question stack">
-							<label class="label" for={`${p}_allergie_autre`}>Autre (précisez)</label>
-							<input type="text" id={`${p}_allergie_autre`} name={`${p}_allergie_autre`}
-								value={a.autre} maxlength="300"
-								placeholder="Aucune" />
 						</div>
 					</fieldset>
 				);
@@ -274,12 +273,12 @@ const canBrunch = ['A', 'B'].includes(cat);
 								<label><input type="checkbox" name="new_XX_allergie_vegetarien" value="oui" /> Végétarien</label>
 								<label><input type="checkbox" name="new_XX_allergie_sansgluten" value="oui" /> Sans gluten</label>
 								<label><input type="checkbox" name="new_XX_allergie_sanslactose" value="oui" /> Sans lactose</label>
+								<label class="autre-choice">
+									<input type="checkbox" class="autre-cb" />
+									<span>Autre</span>
+									<input type="text" name="new_XX_allergie_autre" maxlength="300" placeholder="Précisez..." />
+								</label>
 							</div>
-						</div>
-						<div class="question stack">
-							<label class="label">Autre (précisez)</label>
-							<input type="text" name="new_XX_allergie_autre" maxlength="300"
-								placeholder="Aucune" />
 						</div>
 					</fieldset>
 				</template>
@@ -298,14 +297,25 @@ const canBrunch = ['A', 'B'].includes(cat);
 	.rsvp {
 		max-width: 700px;
 		margin: 0 auto;
-		padding: 2rem 1.5rem 4rem;
+		padding: 3rem 1.5rem 4rem;
 	}
 
 	h1 {
-		font-weight: 300;
-		font-size: 2rem;
-		margin: 0 0 0.5rem;
-		color: var(--color-ink);
+		margin: 0 0 0.75rem;
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-weight: 400;
+		font-size: clamp(1.8rem, 4vw, 2.4rem);
+		color: var(--color-navy-text);
+		letter-spacing: 0.02em;
+	}
+
+	.section-separator {
+		width: 180px;
+		height: 1px;
+		background: var(--color-navy-text);
+		opacity: 0.35;
+		margin: 0 0 2rem;
 	}
 
 	.intro {
@@ -315,8 +325,8 @@ const canBrunch = ['A', 'B'].includes(cat);
 	}
 
 	.success {
-		background: rgba(71, 102, 111, 0.08);
-		color: var(--color-teal);
+		background: rgba(107, 140, 174, 0.12);
+		color: var(--color-navy-text);
 		padding: 0.8rem 1rem;
 		border-radius: 0.35rem;
 		margin: 0 0 1.5rem;
@@ -329,16 +339,17 @@ const canBrunch = ['A', 'B'].includes(cat);
 	}
 
 	.rsvp-card {
-		border: 1px solid rgba(47, 42, 38, 0.12);
+		border: 1px solid rgba(93, 74, 61, 0.12);
 		border-radius: 0.5rem;
-		padding: 1.25rem 1.5rem;
+		padding: 1.5rem 2.5rem;
 		margin: 0 0 1.25rem;
 		background: #fff;
 		position: relative;
+		min-width: 0;
 	}
 
 	.rsvp-card.is-added {
-		border-color: rgba(71, 102, 111, 0.25);
+		border-color: rgba(107, 140, 174, 0.25);
 	}
 
 	.delete-btn {
@@ -360,6 +371,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 
 	.question {
 		margin: 0 0 1rem;
+		min-width: 0;
 	}
 
 	.question:last-child {
@@ -370,7 +382,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 		display: block;
 		margin-bottom: 0.4rem;
 		font-size: 0.9rem;
-		color: var(--color-ink);
+		color: var(--color-brown);
 		font-weight: 500;
 	}
 
@@ -386,38 +398,57 @@ const canBrunch = ['A', 'B'].includes(cat);
 		gap: 0.35rem;
 		font-size: 0.95rem;
 		cursor: pointer;
-		color: var(--color-ink);
+		color: var(--color-brown);
 	}
 
 	input[type="radio"] {
 		width: 1.15rem;
 		height: 1.15rem;
-		accent-color: var(--color-teal);
+		accent-color: var(--color-slate-blue);
 		cursor: pointer;
 	}
 
 	select,
 	input[type="text"] {
 		width: 100%;
+		min-width: 0;
 		padding: 0.6rem 0.75rem;
 		font-size: 1rem;
-		border: 1px solid rgba(47, 42, 38, 0.2);
+		border: 1px solid rgba(93, 74, 61, 0.2);
 		border-radius: 0.35rem;
 		background: #fff;
-		color: var(--color-ink);
-		font-family: inherit;
+		color: var(--color-brown);
+		font-family: var(--font-body);
+	}
+
+	.stack input[type="text"],
+	.stack select {
+		align-self: stretch;
 	}
 
 	select:focus,
 	input[type="text"]:focus {
-		outline: 2px solid var(--color-teal);
+		outline: 2px solid var(--color-slate-blue);
 		outline-offset: 2px;
-		border-color: var(--color-teal);
+		border-color: var(--color-slate-blue);
 	}
 
 	.stack {
-		display: flex;
-		flex-direction: column;
+		min-width: 0;
+	}
+
+	.autre-choice {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		flex-wrap: wrap;
+		width: 100%;
+		min-width: 0;
+	}
+
+	.autre-choice input[type="text"] {
+		flex: 1 1 auto;
+		min-width: 120px;
 	}
 
 	.add-guest-btn {
@@ -426,8 +457,8 @@ const canBrunch = ['A', 'B'].includes(cat);
 		padding: 0.7rem;
 		font-size: 1rem;
 		background: transparent;
-		color: var(--color-teal);
-		border: 1.5px dashed var(--color-teal);
+		color: var(--color-slate-blue);
+		border: 1.5px dashed var(--color-slate-blue);
 		border-radius: 0.35rem;
 		cursor: pointer;
 		font-family: inherit;
@@ -435,7 +466,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 	}
 
 	.add-guest-btn:hover {
-		background: rgba(71, 102, 111, 0.04);
+		background: rgba(107, 140, 174, 0.06);
 	}
 
 	.submit {
@@ -443,7 +474,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 		width: 100%;
 		padding: 0.85rem;
 		font-size: 1rem;
-		background: var(--color-teal);
+		background: var(--color-slate-blue);
 		color: #fff;
 		border: none;
 		border-radius: 0.35rem;
@@ -453,7 +484,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 	}
 
 	.submit:hover {
-		background: var(--color-teal-dark);
+		background: var(--color-navy);
 	}
 
 	.is-disabled {
@@ -463,11 +494,11 @@ const canBrunch = ['A', 'B'].includes(cat);
 
 	@media (max-width: 600px) {
 		.rsvp {
-			padding: 1.5rem 1rem 3rem;
+			padding: 2rem 1rem 3rem;
 		}
 
 		.rsvp-card {
-			padding: 1rem;
+			padding: 1rem 1.5rem;
 		}
 	}
 </style>
@@ -489,11 +520,40 @@ const canBrunch = ['A', 'B'].includes(cat);
 		update();
 	}
 
+	function initAllergies(fieldset: HTMLElement) {
+		const txt = fieldset.querySelector<HTMLInputElement>('input[name$="_allergie_autre"]');
+		if (!txt) return;
+		const cb = fieldset.querySelector<HTMLInputElement>('.autre-cb');
+		if (!cb) return;
+
+		function sync() {
+			cb.checked = txt.value.trim() !== '';
+			txt.disabled = !cb.checked;
+		}
+
+		cb.addEventListener('change', () => {
+			if (cb.checked) {
+				txt.disabled = false;
+				txt.focus();
+			} else {
+				txt.value = '';
+				txt.disabled = true;
+			}
+		});
+
+		txt.addEventListener('input', () => {
+			cb.checked = txt.value.trim() !== '';
+		});
+
+		sync();
+	}
+
 	function initCard(fieldset: HTMLElement) {
 		const prefix = fieldset.dataset.guestPrefix;
 		if (!prefix) return;
 		const menuWrap = fieldset.querySelector<HTMLElement>(`select[name="${prefix}_menu"]`)?.closest('.question');
 		if (menuWrap) bindYesNo(`${prefix}_dinner`, menuWrap);
+		initAllergies(fieldset);
 	}
 
 	document.querySelectorAll<HTMLElement>('[data-guest-prefix]').forEach(initCard);

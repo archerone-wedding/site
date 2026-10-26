@@ -1,0 +1,42 @@
+import { t as __exportAll } from "./rolldown-runtime_D8jQpDG7.mjs";
+import { E as renderComponent, M as renderTemplate, N as maybeRenderHead } from "./sequence_DKkBVb9G.mjs";
+import { n as createComponent, t as createAstro } from "./compiler_B21378Bx.mjs";
+import { n as site } from "./site_KPf2B4Rz.mjs";
+import { t as $$PageLayout } from "./PageLayout_CTg47sDt.mjs";
+// src/components/program/ProgramA.astro
+var $$ProgramA = createComponent(($$result, $$props, $$slots) => {
+	return renderTemplate`${maybeRenderHead($$result)}<div class="program-content" data-astro-cid-grog4d2d><div class="programme" data-astro-cid-grog4d2d><!-- Corde centrale SVG --><div class="rope-line" aria-hidden="true" data-astro-cid-grog4d2d><svg width="20" height="100%" preserveAspectRatio="none" data-astro-cid-grog4d2d><defs data-astro-cid-grog4d2d><pattern id="ropePattern" width="20" height="40" patternUnits="userSpaceOnUse" data-astro-cid-grog4d2d><!-- === Demi-haut : brin B en arrière-plan, brin A au premier plan === --><path d="M15,0 C15,10 5,10 5,20" fill="none" stroke="#9a7a52" stroke-width="3.6" stroke-linecap="round" data-astro-cid-grog4d2d></path><path d="M5,0 C5,10 15,10 15,20" fill="none" stroke="#c4a882" stroke-width="3.6" stroke-linecap="round" data-astro-cid-grog4d2d></path><path d="M5,0 C5,10 15,10 15,20" fill="none" stroke="#e0ccac" stroke-width="1.2" stroke-opacity="0.45" stroke-linecap="round" data-astro-cid-grog4d2d></path><!-- === Demi-bas : brin A en arrière-plan, brin B au premier plan === --><path d="M15,20 C15,30 5,30 5,40" fill="none" stroke="#9a7a52" stroke-width="3.6" stroke-linecap="round" data-astro-cid-grog4d2d></path><path d="M5,20 C5,30 15,30 15,40" fill="none" stroke="#c4a882" stroke-width="3.6" stroke-linecap="round" data-astro-cid-grog4d2d></path><path d="M5,20 C5,30 15,30 15,40" fill="none" stroke="#e0ccac" stroke-width="1.2" stroke-opacity="0.45" stroke-linecap="round" data-astro-cid-grog4d2d></path><!-- Ombres subtiles dans l'entrelacement --><path d="M10,4 Q10,10 10,16" fill="none" stroke="#5c4228" stroke-width="0.6" stroke-opacity="0.2" data-astro-cid-grog4d2d></path><path d="M10,24 Q10,30 10,36" fill="none" stroke="#5c4228" stroke-width="0.6" stroke-opacity="0.2" data-astro-cid-grog4d2d></path></pattern></defs><rect width="100%" height="100%" fill="url(#ropePattern)" data-astro-cid-grog4d2d></rect></svg></div><!-- Vendredi --><div class="day" data-astro-cid-grog4d2d><h2 class="day-title" data-astro-cid-grog4d2d>Vendredi</h2><div class="step" data-astro-cid-grog4d2d><div class="place" data-astro-cid-grog4d2d><span class="place-name" data-astro-cid-grog4d2d>Mairie de Suresnes</span><span class="place-city" data-astro-cid-grog4d2d>Suresnes</span></div><div class="event" data-astro-cid-grog4d2d><span class="event-label" data-astro-cid-grog4d2d>Mariage civil</span><span class="event-time" data-astro-cid-grog4d2d>15h00</span></div></div><div class="step" data-astro-cid-grog4d2d><div class="place" data-astro-cid-grog4d2d><span class="place-name" data-astro-cid-grog4d2d>Restaurant Pré St-Germain</span><span class="place-city" data-astro-cid-grog4d2d>Louviers</span></div><div class="event" data-astro-cid-grog4d2d><span class="event-label" data-astro-cid-grog4d2d>Dîner avec les témoins</span><span class="event-time" data-astro-cid-grog4d2d>19h30</span></div></div></div><!-- Samedi --><div class="day" data-astro-cid-grog4d2d><h2 class="day-title" data-astro-cid-grog4d2d>Samedi</h2><div class="step" data-astro-cid-grog4d2d><div class="place" data-astro-cid-grog4d2d><span class="place-name" data-astro-cid-grog4d2d>Église Notre-Dame de Tourny</span><span class="place-city" data-astro-cid-grog4d2d>Vexin-sur-Epte</span></div><div class="event" data-astro-cid-grog4d2d><span class="event-label" data-astro-cid-grog4d2d>Culte</span><span class="event-time" data-astro-cid-grog4d2d>15h30</span></div></div><div class="step" data-astro-cid-grog4d2d><div class="place" data-astro-cid-grog4d2d><span class="place-name" data-astro-cid-grog4d2d>Château du Chesnay-Haguest</span><span class="place-city" data-astro-cid-grog4d2d>Vexin-sur-Epte</span></div><div class="event" data-astro-cid-grog4d2d><span class="event-label" data-astro-cid-grog4d2d>Vin d'honneur</span><span class="event-time" data-astro-cid-grog4d2d>18h00</span></div></div><div class="step no-place" data-astro-cid-grog4d2d><div class="place" data-astro-cid-grog4d2d></div><div class="event" data-astro-cid-grog4d2d><span class="event-label" data-astro-cid-grog4d2d>Dîner</span><span class="event-time" data-astro-cid-grog4d2d>20h00</span></div></div><div class="step no-place" data-astro-cid-grog4d2d><div class="place" data-astro-cid-grog4d2d></div><div class="event" data-astro-cid-grog4d2d><span class="event-label" data-astro-cid-grog4d2d>Soirée dansante</span><span class="event-time" data-astro-cid-grog4d2d>23h00</span><span class="event-detail" data-astro-cid-grog4d2d>Fin de la soirée à 03h00</span></div></div></div><!-- Dimanche --><div class="day" data-astro-cid-grog4d2d><h2 class="day-title" data-astro-cid-grog4d2d>Dimanche</h2><div class="step" data-astro-cid-grog4d2d><div class="place" data-astro-cid-grog4d2d><span class="place-name" data-astro-cid-grog4d2d>Château du Chesnay-Haguest</span><span class="place-city" data-astro-cid-grog4d2d>Vexin-sur-Epte</span></div><div class="event" data-astro-cid-grog4d2d><span class="event-label" data-astro-cid-grog4d2d>Brunch</span><span class="event-time" data-astro-cid-grog4d2d>10h00</span></div></div></div></div></div>`;
+}, "C:/Users/Charles Labelle/OneDrive/Documents/Mariage/src/components/program/ProgramA.astro", void 0);
+// src/components/program/ProgramB.astro
+var $$ProgramB = createComponent(($$result, $$props, $$slots) => {
+	return renderTemplate`${maybeRenderHead($$result)}<div class="program-content"><h2>Programme B</h2><p>À compléter par Tiffany et Charles.</p></div>`;
+}, "C:/Users/Charles Labelle/OneDrive/Documents/Mariage/src/components/program/ProgramB.astro", void 0);
+// src/components/program/ProgramC.astro
+var $$ProgramC = createComponent(($$result, $$props, $$slots) => {
+	return renderTemplate`${maybeRenderHead($$result)}<div class="program-content"><h2>Programme C</h2><p>À compléter par Tiffany et Charles.</p></div>`;
+}, "C:/Users/Charles Labelle/OneDrive/Documents/Mariage/src/components/program/ProgramC.astro", void 0);
+// src/components/program/ProgramD.astro
+var $$ProgramD = createComponent(($$result, $$props, $$slots) => {
+	return renderTemplate`${maybeRenderHead($$result)}<div class="program-content"><h2>Programme D</h2><p>À compléter par Tiffany et Charles.</p></div>`;
+}, "C:/Users/Charles Labelle/OneDrive/Documents/Mariage/src/components/program/ProgramD.astro", void 0);
+// src/pages/le-mariage.astro
+var le_mariage_exports = /* @__PURE__ */ __exportAll({
+	default: () => $$LeMariage,
+	file: () => $$file,
+	url: () => $$url
+});
+createAstro("https://astro.build");
+var $$LeMariage = createComponent(($$result, $$props, $$slots) => {
+	const Astro = $$result.createAstro($$props, $$slots);
+	Astro.self = $$LeMariage;
+	const cat = Astro.locals.group?.category || "A";
+	return renderTemplate`${renderComponent($$result, "PageLayout", $$PageLayout, {
+		"title": `Le mariage — ${site.name}`,
+		"data-astro-cid-mbkxrqej": true
+	}, { "default": ($$result) => renderTemplate`${maybeRenderHead($$result)}<section class="page" data-astro-cid-mbkxrqej><h1 data-astro-cid-mbkxrqej>Le programme</h1><div class="section-separator" data-astro-cid-mbkxrqej></div>${cat === "A" && renderTemplate`${renderComponent($$result, "ProgramA", $$ProgramA, { "data-astro-cid-mbkxrqej": true })}`}${cat === "B" && renderTemplate`${renderComponent($$result, "ProgramB", $$ProgramB, { "data-astro-cid-mbkxrqej": true })}`}${cat === "C" && renderTemplate`${renderComponent($$result, "ProgramC", $$ProgramC, { "data-astro-cid-mbkxrqej": true })}`}${cat === "D" && renderTemplate`${renderComponent($$result, "ProgramD", $$ProgramD, { "data-astro-cid-mbkxrqej": true })}`}</section>` })}`;
+}, "C:/Users/Charles Labelle/OneDrive/Documents/Mariage/src/pages/le-mariage.astro", void 0);
+var $$file = "C:/Users/Charles Labelle/OneDrive/Documents/Mariage/src/pages/le-mariage.astro";
+var $$url = "/le-mariage";
+// \0virtual:astro:page:src/pages/le-mariage@_@astro
+var page = () => le_mariage_exports;
+export { page };

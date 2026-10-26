@@ -13,20 +13,29 @@ const group = Astro.locals.group;
 
 	<section class="hero">
 		<div class="hero-panel">
-			<h1>{site.nameLines[0]}<br />{site.nameLines[1]}</h1>
-			<p class="date">{site.date}</p>
+			<h1>{site.nameLines[0]} <span class="amp">&amp;</span> {site.nameLines[1]}</h1>
+			<div class="hero-separator"></div>
 			{group && <p class="greeting">Bienvenue sur notre site de mariage !</p>}
-			<p class="subtitle">{site.subtitle}</p>
+			<p class="subtitle">Vous trouverez ici toutes les informations pour préparer cette journée.</p>
+			<p class="subtitle">
+				Nous vous remercions de bien vouloir confirmer votre présence via <a href="/rsvp" class="rsvp-link">ce formulaire</a> avant le 28 février 2027.
+			</p>
 		</div>
 		<div class="hero-media" role="img" aria-label={site.name}>
 			<span>Photo à venir</span>
 		</div>
 	</section>
+
+	<footer class="contact-footer">
+		<p class="contact-title">Contact</p>
+		<p class="contact-info">xx xx xx xx xx (Tiffany) / xx xx xx xx xx (Charles)</p>
+		<p class="contact-info">xxx</p>
+	</footer>
 </Layout>
 
 <style>
 	.landing-nav {
-		padding: 0.75rem 1.5rem;
+		background: var(--color-navy);
 	}
 
 	.hero {
@@ -38,30 +47,20 @@ const group = Astro.locals.group;
 		margin: 0;
 		padding: 0;
 		align-items: stretch;
+		min-height: calc(100dvh - 80px);
 	}
 
 	.hero-panel {
 		position: relative;
 		overflow: hidden;
-		background: var(--color-dusty-denim);
-		color: #060627;
+		background: var(--color-cream);
+		color: var(--color-brown);
 		padding: 6rem 3rem;
-		aspect-ratio: 1 / 1;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-	}
-
-	.hero-panel::after {
-		content: '';
-		position: absolute;
-		inset: 0;
-		background: radial-gradient(
-			circle at 20% 80%,
-			rgba(0, 0, 0, 0.25),
-			transparent 60%
-		);
-		pointer-events: none;
+		align-items: flex-end;
+		text-align: right;
 	}
 
 	.hero-panel > * {
@@ -70,43 +69,107 @@ const group = Astro.locals.group;
 	}
 
 	h1 {
-		margin: 0 0 2.5rem;
-		font-size: clamp(2.5rem, 6vw, 4.5rem);
-		font-weight: 300;
-		line-height: 1.05;
+		margin: 0 0 1.5rem;
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-weight: 400;
+		font-size: clamp(2rem, 4.5vw, 3.5rem);
+		line-height: 1.1;
+		color: var(--color-navy-text);
+		letter-spacing: 0.02em;
+	}
+
+	.amp {
+		font-family: var(--font-script);
+		font-style: normal;
+		font-size: 0.85em;
+		color: var(--color-navy-text);
+	}
+
+	.hero-separator {
+		width: 60%;
+		height: 1px;
+		background: var(--color-navy-text);
+		margin: 0 0 2rem;
+		opacity: 0.5;
 	}
 
 	.subtitle {
-		margin: 0 0 0.5rem;
-		font-size: 1.1rem;
+		margin: 0 0 1.25rem;
+		font-size: 1.05rem;
+		line-height: 1.65;
+		max-width: 480px;
 	}
 
-	.date {
-		margin: 0;
-		font-size: 0.9rem;
-		opacity: 0.85;
+	.subtitle:last-child {
+		margin-bottom: 0;
+	}
+
+	.rsvp-link {
+		color: var(--color-brown);
+		font-weight: 600;
+		text-decoration: none;
+		border-bottom: 1px solid transparent;
+		transition: border-color 0.2s ease;
+	}
+
+	.rsvp-link:hover {
+		border-bottom-color: var(--color-brown);
+	}
+
+	.greeting {
+		margin: 0 0 1.5rem;
+		font-size: 1.1rem;
+		font-weight: 500;
+		color: var(--color-brown);
 	}
 
 	.hero-media {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: #ede7d9;
-		color: var(--color-dusty-denim);
-		font-size: 0.9rem;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		aspect-ratio: 1 / 1;
+		background: #c0c0c0;
+		color: var(--color-brown);
+		font-size: 1.2rem;
+		letter-spacing: 0.05em;
+	}
+
+	.contact-footer {
+		background: var(--color-slate-blue);
+		color: var(--color-white);
+		padding: 2rem 1.5rem;
+		text-align: center;
+		font-family: var(--font-serif);
+	}
+
+	.contact-title {
+		margin: 0 0 0.5rem;
+		font-size: 1.1rem;
+		font-style: italic;
+	}
+
+	.contact-info {
+		margin: 0;
+		font-size: 0.95rem;
+		opacity: 0.9;
 	}
 
 	@media (max-width: 860px) {
 		.hero {
 			grid-template-columns: 1fr;
+			min-height: auto;
 		}
 
 		.hero-panel {
-			padding: 2.75rem 1.75rem 6rem;
-			aspect-ratio: auto;
+			padding: 3rem 1.75rem;
+			align-items: center;
+			text-align: center;
+		}
+
+		.hero-separator {
+			width: 40%;
+			margin-left: auto;
+			margin-right: auto;
 		}
 
 		h1 {
@@ -115,24 +178,17 @@ const group = Astro.locals.group;
 
 		.hero-media {
 			order: 3;
-			aspect-ratio: 1 / 1;
+			min-height: 300px;
 		}
 	}
 
 	@media (max-width: 420px) {
 		.hero-panel {
-			padding: 2rem 1.25rem 5rem;
+			padding: 2.5rem 1.25rem;
 		}
 
 		.subtitle {
 			font-size: 1rem;
 		}
-	}
-	.greeting {
-		margin: 0 0 0.5rem;
-		font-size: 1.1rem;
-		font-weight: 500;
-		color: #060627;
-		opacity: 0.9;
 	}
 </style>

@@ -12,7 +12,7 @@ const { title = site.name, description } = Astro.props;
 ---
 
 <Layout title={title} description={description}>
-	<header slot="header" class="page-header">
+	<header slot="header">
 		<SiteNav variant="bar" />
 	</header>
 
@@ -20,7 +20,10 @@ const { title = site.name, description } = Astro.props;
 </Layout>
 
 <style>
-	.page-header {
-		background: var(--color-cream);
+	header {
+		position: sticky;
+		top: 0;
+		z-index: 100;
+		background: var(--color-navy);
 	}
 </style>
