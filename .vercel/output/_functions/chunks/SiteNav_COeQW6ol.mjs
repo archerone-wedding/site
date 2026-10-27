@@ -1,6 +1,6 @@
 import { F as addAttribute, I as createRenderInstruction, M as renderTemplate, N as maybeRenderHead, P as renderHead, k as renderSlot } from "./sequence_DKkBVb9G.mjs";
 import { n as createComponent, t as createAstro } from "./compiler_B21378Bx.mjs";
-import { t as actions } from "./_astro_actions_CpJCHj5k.mjs";
+import { t as actions } from "./_astro_actions_BOisA_Zk.mjs";
 import { n as site, t as navItems } from "./site_KPf2B4Rz.mjs";
 // node_modules/astro/dist/runtime/server/render/script.js
 /**
@@ -27,8 +27,8 @@ createAstro("https://astro.build");
 var $$Layout = createComponent(($$result, $$props, $$slots) => {
 	const Astro = $$result.createAstro($$props, $$slots);
 	Astro.self = $$Layout;
-	const { title = site.name, description = `${site.name} — ${site.subtitle}` } = Astro.props;
-	return renderTemplate`<html lang="fr" data-astro-cid-ju4pidww><head><meta charset="utf-8"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" href="/favicon.ico"><meta name="viewport" content="width=device-width"><meta name="theme-color" content="#2D4A6F"><meta name="generator"${addAttribute(Astro.generator, "content")}><meta name="description"${addAttribute(description, "content")}><title>${title}</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Great+Vibes&display=swap" rel="stylesheet">${renderHead($$result)}</head><body data-astro-cid-ju4pidww>${renderSlot($$result, $$slots["header"])}<main data-astro-cid-ju4pidww>${renderSlot($$result, $$slots["default"])}</main><footer class="site-footer" data-astro-cid-ju4pidww><p data-astro-cid-ju4pidww>${site.name}</p></footer></body></html>`;
+	const { title = site.name, description = `${site.name} — ${site.subtitle}`, hideFooter = false } = Astro.props;
+	return renderTemplate`<html lang="fr" data-astro-cid-ju4pidww><head><meta charset="utf-8"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="icon" href="/favicon.ico"><meta name="viewport" content="width=device-width"><meta name="theme-color" content="#2D4A6F"><meta name="generator"${addAttribute(Astro.generator, "content")}><meta name="description"${addAttribute(description, "content")}><title>${title}</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Great+Vibes&display=swap" rel="stylesheet">${renderHead($$result)}</head><body data-astro-cid-ju4pidww>${renderSlot($$result, $$slots["header"])}<main data-astro-cid-ju4pidww>${renderSlot($$result, $$slots["default"])}</main>${!hideFooter && renderTemplate`<footer class="site-footer" data-astro-cid-ju4pidww><p data-astro-cid-ju4pidww>${site.name}</p></footer>`}</body></html>`;
 }, "C:/Users/Charles Labelle/OneDrive/Documents/Mariage/src/layouts/Layout.astro", void 0);
 // src/components/SiteNav.astro
 createAstro("https://astro.build");

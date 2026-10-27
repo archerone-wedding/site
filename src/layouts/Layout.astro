@@ -4,11 +4,13 @@ import { site } from '../data/site';
 export interface Props {
 	title?: string;
 	description?: string;
+	hideFooter?: boolean;
 }
 
 const {
 	title = site.name,
 	description = `${site.name} — ${site.subtitle}`,
+	hideFooter = false,
 } = Astro.props;
 ---
 
@@ -34,9 +36,11 @@ const {
 			<slot />
 		</main>
 
+		{!hideFooter && (
 		<footer class="site-footer">
 			<p>{site.name}</p>
 		</footer>
+		)}
 	</body>
 </html>
 
