@@ -1,0 +1,1 @@
+ALTER TABLE `guest` ADD `is_pre_filled` integer DEFAULT true NOT NULL;

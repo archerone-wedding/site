@@ -7,26 +7,82 @@ export interface Props {
 }
 
 const { variant = 'bar' } = Astro.props;
+const group = Astro.locals.group;
 ---
 
 <nav class:list={['site-nav', `site-nav--${variant}`]} aria-label="Navigation principale">
 	<a class="site-nav__brand" href="/">{site.name}</a>
-	<ul class="site-nav__links">
+
+	<button
+		class="nav-toggle"
+		type="button"
+		aria-label="Ouvrir le menu"
+		aria-expanded="false"
+		aria-controls="site-nav-menu"
+		data-nav-toggle
+	>
+		<span class="nav-toggle__bar" aria-hidden="true"></span>
+		<span class="nav-toggle__bar" aria-hidden="true"></span>
+		<span class="nav-toggle__bar" aria-hidden="true"></span>
+	</button>
+
+	<div class="site-nav__menu" id="site-nav-menu">
+		<ul class="site-nav__links">
+			{
+				navItems.map((item) => (
+					<li class:list={[{ 'has-children': item.children }]}>
+						{item.href ? (
+							<a
+								href={item.href}
+								class:list={{
+									active: Astro.url.pathname.startsWith(item.href),
+								}}
+							>
+								{item.label}
+								{item.children && (
+									<span class="caret" aria-hidden="true">▾</span>
+								)}
+							</a>
+						) : (
+							<button type="button" class="nav-trigger" data-submenu-toggle aria-expanded="false">
+								{item.label}
+								{item.children && (
+									<span class="caret" aria-hidden="true">▾</span>
+								)}
+							</button>
+						)}
+						{item.children && (
+							<ul class="submenu">
+								{item.children.map((child) => (
+									<li>
+										<a
+											href={child.href}
+											class:list={{
+												active:
+													Astro.url.pathname === child.href ||
+													Astro.url.pathname.startsWith(child.href + '/'),
+											}}
+										>
+											{child.label}
+										</a>
+									</li>
+								))}
+								</ul>
+							)}
+						</li>
+					)
+				)
+			}
+		</ul>
 		{
-			navItems.map((item) => (
-				<li>
-					<a
-						href={item.href}
-						class:list={{
-							active: Astro.url.pathname.startsWith(item.href),
-						}}
-					>
-						{item.label}
-					</a>
-				</li>
-			))
+			group && (
+				<div class="site-nav__user">
+					<span class="user-name">{group.name}</span>
+					<a href="/logout" class="user-logout" title="Changer d'utilisateur">×</a>
+				</div>
+			)
 		}
-	</ul>
+	</div>
 </nav>
 
 <style>
@@ -40,23 +96,73 @@ const { variant = 'bar' } = Astro.props;
 
 	.site-nav--bar {
 		padding: 0.6rem 1.5rem;
-		border-bottom: 1px solid rgba(47, 42, 38, 0.12);
+		background: var(--color-navy);
 	}
 
 	.site-nav--inline {
 		gap: 1.25rem;
-		padding: 0;
+		padding: 0.6rem 1.5rem;
+		background: var(--color-navy);
 	}
 
 	.site-nav__brand {
-		font-weight: 600;
-		color: var(--color-ink);
+		font-weight: 500;
+		color: var(--color-white);
 		text-decoration: none;
 		white-space: nowrap;
+		font-family: var(--font-serif);
+		font-size: 1rem;
+		letter-spacing: 0.03em;
 	}
 
 	.site-nav--inline .site-nav__brand {
 		display: none;
+	}
+
+	/* === Bouton hamburger === */
+	.nav-toggle {
+		display: none;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 5px;
+		width: 2.2rem;
+		height: 2.2rem;
+		padding: 0;
+		background: none;
+		border: none;
+		cursor: pointer;
+		margin-left: auto;
+		z-index: 102;
+	}
+
+	.nav-toggle__bar {
+		display: block;
+		width: 1.5rem;
+		height: 2px;
+		background: var(--color-white);
+		border-radius: 2px;
+		transition: transform 200ms ease, opacity 200ms ease;
+	}
+
+	.nav-toggle.is-open .nav-toggle__bar:nth-child(1) {
+		transform: translateY(7px) rotate(45deg);
+	}
+
+	.nav-toggle.is-open .nav-toggle__bar:nth-child(2) {
+		opacity: 0;
+	}
+
+	.nav-toggle.is-open .nav-toggle__bar:nth-child(3) {
+		transform: translateY(-7px) rotate(-45deg);
+	}
+
+	/* === Menu (conteneur) === */
+	.site-nav__menu {
+		display: flex;
+		align-items: center;
+		flex: 1;
+		gap: inherit;
 	}
 
 	.site-nav__links {
@@ -66,39 +172,235 @@ const { variant = 'bar' } = Astro.props;
 		list-style: none;
 		margin: 0;
 		padding: 0;
+		font-family: var(--font-serif);
+		font-variant: small-caps;
+		letter-spacing: 0.04em;
 	}
 
-	.site-nav__links a {
-		display: inline-block;
+	.site-nav__links > li > a,
+	.site-nav__links > li > .nav-trigger {
+		display: inline-flex;
+		align-items: center;
 		padding: 0.3rem 0;
-		color: var(--color-muted);
+		color: var(--color-white);
 		text-decoration: none;
-		font-size: 0.9rem;
+		font-size: 0.95rem;
+		background: none;
+		border: none;
+		cursor: pointer;
+		font-family: inherit;
+		font-variant: small-caps;
+		letter-spacing: 0.04em;
 	}
 
 	.site-nav__links a:hover,
-	.site-nav__links a.active {
-		color: var(--color-ink);
+	.site-nav__links a.active,
+	.site-nav__links .nav-trigger:hover {
+		color: var(--color-slate-blue);
 	}
 
-	.site-nav__links a.active {
+	.site-nav__links > li > a.active {
 		border-bottom: 1px solid currentColor;
 	}
 
+	/* Dropdown */
+	.site-nav__links li.has-children {
+		position: relative;
+	}
+
+	.caret {
+		font-size: 0.65rem;
+		margin-left: 0.25rem;
+		opacity: 0.6;
+	}
+
+	.submenu {
+		position: absolute;
+		top: calc(100% + 0.35rem);
+		left: 50%;
+		transform: translateX(-50%);
+		min-width: 10rem;
+		background: var(--color-slate-blue);
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		border-radius: 0.4rem;
+		padding: 0.35rem 0;
+		list-style: none;
+		box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+		transition: opacity 150ms ease, visibility 150ms ease;
+		z-index: 100;
+	}
+
+	.submenu a {
+		display: block;
+		padding: 0.45rem 1rem;
+		white-space: nowrap;
+		font-size: 0.9rem;
+		color: var(--color-white);
+		text-decoration: none;
+	}
+
+	.submenu a:hover,
+	.submenu a.active {
+		color: var(--color-cream);
+		background: rgba(0, 0, 0, 0.12);
+		border-radius: 0.25rem;
+	}
+
+	.site-nav__links li.has-children:hover > .submenu,
+	.site-nav__links li.has-children:focus-within > .submenu {
+		opacity: 1;
+		visibility: visible;
+		pointer-events: auto;
+	}
+
+	/* User badge */
+	.site-nav__user {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin-left: auto;
+		font-size: 0.85rem;
+		color: rgba(255, 255, 255, 0.75);
+	}
+
+	.user-name {
+		max-width: 120px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.user-logout {
+		background: none;
+		border: none;
+		color: rgba(255, 255, 255, 0.75);
+		font-size: 1.1rem;
+		line-height: 1;
+		cursor: pointer;
+		padding: 0.15rem 0.35rem;
+		border-radius: 0.25rem;
+	}
+
+	.user-logout:hover {
+		color: var(--color-white);
+		background: rgba(255, 255, 255, 0.15);
+	}
+
+	/* === Mobile === */
 	@media (max-width: 720px) {
 		.site-nav--bar {
+			flex-wrap: wrap;
+			padding: 0.6rem 1.25rem;
+		}
+
+		.nav-toggle {
+			display: flex;
+		}
+
+		.site-nav.is-menu-open .site-nav__brand {
+			display: none;
+		}
+
+		.site-nav__menu {
+			display: none;
+			position: fixed;
+			inset: 0;
+			width: 100vw;
+			height: 100vh;
+			background: rgba(45, 74, 111, 0.95);
+			z-index: 101;
+			padding: 5rem 2rem 2rem;
 			flex-direction: column;
-			align-items: flex-start;
-			gap: 0.35rem;
-			padding: 0.6rem 1.25rem 0.75rem;
+			align-items: center;
+			justify-content: center;
+			gap: 1.5rem;
+		}
+
+		.site-nav__menu.is-open {
+			display: flex;
 		}
 
 		.site-nav__links {
-			gap: 0.25rem 1rem;
+			flex-direction: column;
+			align-items: center;
+			gap: 1rem;
 		}
 
-		.site-nav--inline {
-			gap: 0.25rem 1rem;
+		.site-nav__links > li > a,
+		.site-nav__links > li > .nav-trigger {
+			font-size: 1.15rem;
+			padding: 0.4rem 0;
+			justify-content: center;
+		}
+
+		.site-nav__user {
+			margin-left: 0;
+			padding-top: 1rem;
+			border-top: 1px solid rgba(255, 255, 255, 0.12);
+			width: 100%;
+			justify-content: center;
+		}
+
+		.submenu {
+			position: static;
+			transform: none;
+			box-shadow: none;
+			border: none;
+			background: transparent;
+			padding: 0.5rem 0 0 0;
+			display: none;
+			text-align: center;
+		}
+
+		.submenu.is-open {
+			display: block;
+		}
+
+		.submenu li {
+			text-align: center;
+		}
+
+		.submenu a {
+			padding: 0.35rem 0;
+			font-size: 0.9rem;
+		}
+
+		/* Caret / triangle inversé en mobile */
+		.caret {
+			font-size: 0.75rem;
+			margin-left: 0.4rem;
+			opacity: 0.7;
+			transition: transform 200ms ease;
+			display: inline-block;
+		}
+
+		.nav-trigger[aria-expanded="true"] .caret,
+		[data-submenu-toggle].is-open .caret {
+			transform: rotate(180deg);
+		}
+
+		.submenu {
+			position: static;
+			transform: none;
+			box-shadow: none;
+			border: none;
+			background: transparent;
+			padding: 0.1rem 0 0 0.75rem;
+			opacity: 1;
+			visibility: visible;
+			pointer-events: auto;
+		}
+
+		.submenu a {
+			padding: 0.25rem 0;
+			font-size: 0.85rem;
+		}
+
+		.caret {
+			display: none;
 		}
 	}
 
@@ -107,8 +409,40 @@ const { variant = 'bar' } = Astro.props;
 			font-size: 0.95rem;
 		}
 
-		.site-nav__links a {
+		.site-nav__links > li > a,
+		.site-nav__links > li > .nav-trigger {
 			font-size: 0.85rem;
 		}
 	}
 </style>
+
+<script>
+	const toggle = document.querySelector('[data-nav-toggle]') as HTMLButtonElement | null;
+	const menu = document.getElementById('site-nav-menu');
+	const nav = document.querySelector('.site-nav');
+	if (toggle && menu) {
+		toggle.addEventListener('click', () => {
+			const isOpen = menu.classList.toggle('is-open');
+			toggle.classList.toggle('is-open', isOpen);
+			if (nav) nav.classList.toggle('is-menu-open', isOpen);
+			toggle.setAttribute('aria-expanded', String(isOpen));
+			document.body.style.overflow = isOpen ? 'hidden' : '';
+			const bars = toggle.querySelectorAll('.nav-toggle__bar');
+			bars.forEach((bar) => bar.classList.toggle('is-open', isOpen));
+		});
+	}
+
+	// Accordéon sous-menus (mobile)
+	document.querySelectorAll<HTMLElement>('[data-submenu-toggle]').forEach((btn) => {
+		btn.addEventListener('click', () => {
+			const parent = btn.closest('li');
+			if (!parent) return;
+			const submenu = parent.querySelector<HTMLElement>('.submenu');
+			if (!submenu) return;
+			submenu.classList.toggle('is-open');
+			btn.classList.toggle('is-open');
+			const isExpanded = btn.classList.contains('is-open');
+			btn.setAttribute('aria-expanded', String(isExpanded));
+		});
+	});
+</script>

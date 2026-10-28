@@ -1,7 +1,64 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
-import VenueMap from '../components/VenueMap.astro';
 import { site } from '../data/site';
-import { church,
-} from '../data/wedding';
+import { contact } from '../data/wedding';
 ---
+
+<PageLayout title={`Contact — ${site.name}`}>
+	<section class="page">
+		<h1>Contact</h1>
+		<div class="section-separator"></div>
+		<p class="contact-name">{contact.name}</p>
+		<address class="contact-address">
+			{contact.street}<br />
+			{contact.postalcode} {contact.city}<br />
+			{contact.country}
+		</address>
+	</section>
+</PageLayout>
+
+<style>
+	.page {
+		max-width: 960px;
+		margin: 0 auto;
+		padding: 3rem 1.5rem 4rem;
+	}
+
+	h1 {
+		margin: 0 0 0.75rem;
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-weight: 400;
+		font-size: clamp(1.8rem, 4vw, 2.4rem);
+		color: var(--color-navy-text);
+		letter-spacing: 0.02em;
+	}
+
+	.section-separator {
+		width: 180px;
+		height: 1px;
+		background: var(--color-navy-text);
+		opacity: 0.35;
+		margin: 0 0 2.5rem;
+	}
+
+	.contact-name {
+		margin: 0 0 0.5rem;
+		font-size: 1.15rem;
+		font-weight: 500;
+		color: var(--color-brown);
+	}
+
+	.contact-address {
+		font-style: normal;
+		font-size: 1.05rem;
+		line-height: 1.65;
+		color: var(--color-brown);
+	}
+
+	@media (max-width: 720px) {
+		.page {
+			padding: 2rem 1.25rem 3rem;
+		}
+	}
+</style>

@@ -1,1 +1,58 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import { site } from '../data/site';
+---
 
+<PageLayout title={`Logements — ${site.name}`}>
+	<section class="page">
+		<h1>Logements</h1>
+		<div class="section-separator"></div>
+		<p>
+			Vous trouverez ci-dessous une liste de logements situés à proximité du lieu de réception.
+		</p>
+		<p class="placeholder">Xxx</p>
+	</section>
+</PageLayout>
+
+<style>
+	.page {
+		max-width: 960px;
+		margin: 0 auto;
+		padding: 3rem 1.5rem 4rem;
+	}
+
+	h1 {
+		margin: 0 0 0.75rem;
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-weight: 400;
+		font-size: clamp(1.8rem, 4vw, 2.4rem);
+		color: var(--color-navy-text);
+		letter-spacing: 0.02em;
+	}
+
+	.section-separator {
+		width: 180px;
+		height: 1px;
+		background: var(--color-navy-text);
+		opacity: 0.35;
+		margin: 0 0 2.5rem;
+	}
+
+	p {
+		font-size: 1.05rem;
+		line-height: 1.65;
+		color: var(--color-brown);
+	}
+
+	.placeholder {
+		color: var(--color-muted);
+		font-style: italic;
+	}
+
+	@media (max-width: 720px) {
+		.page {
+			padding: 2rem 1.25rem 3rem;
+		}
+	}
+</style>

@@ -12,10 +12,16 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/vercel": "^11.0.16",
+    "@libsql/client": "^0.18.0",
     "astro": "^7.3.8",
+    "drizzle-orm": "^0.45.4",
     "leaflet": "^1.9.4"
   },
   "devDependencies": {
-    "@types/leaflet": "^1.9.22"
+    "@types/leaflet": "^1.9.22",
+    "dotenv": "^18.0.9",
+    "drizzle-kit": "^0.31.11",
+    "tsx": "^4.23.15"
   }
 }

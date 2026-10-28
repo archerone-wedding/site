@@ -1,5 +1,11 @@
 # build output
 dist/
+.vercel/
+
+# local sqlite (replaced by Turso remote)
+local.db
+*.db-shm
+*.db-wal
 # generated types
 .astro/
 
@@ -22,3 +28,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+codes-acces.txt
+*.csv
