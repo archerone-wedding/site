@@ -476,6 +476,27 @@ const group = Astro.locals.group;
 		[data-submenu-toggle].is-open .caret {
 			transform: rotate(180deg);
 		}
+
+		.submenu {
+			position: static;
+			transform: none;
+			box-shadow: none;
+			border: none;
+			background: transparent;
+			padding: 0.1rem 0 0 0.75rem;
+			opacity: 1;
+			visibility: visible;
+			pointer-events: auto;
+		}
+
+		.submenu a {
+			padding: 0.25rem 0;
+			font-size: 0.85rem;
+		}
+
+		.caret {
+			display: none;
+		}
 	}
 
 	@media (max-width: 380px) {
