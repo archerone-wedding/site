@@ -27,7 +27,8 @@ const {
 		<title>{title}</title>
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Great+Vibes&display=swap" rel="stylesheet">
+		<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Great+Vibes&family=Raleway:wght@300;400;500;600&display=swap">
+		<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Great+Vibes&family=Raleway:wght@300;400;500;600&display=swap" rel="stylesheet">
 	</head>
 	<body>
 		<slot name="header" />
@@ -49,7 +50,7 @@ const {
 		/* Couleurs inspirées du PDF */
 		--color-navy: #2D4A6F;
 		--color-slate-blue: #6B8CAE;
-		--color-cream: #F8F2E8;
+		--color-cream: #FDFCFA;
 		--color-brown: #5C4A3D;
 		--color-navy-text: #2D4A6F;
 		--color-gold-accent: #b58a54;
@@ -58,16 +59,19 @@ const {
 		/* Aliases compatibilité */
 		--color-prussian-blue: #2D4A6F;
 		--color-goldenrod: #b58a54;
-		--color-soft-linen: #F8F2E8;
+		--color-soft-linen: #FDFCFA;
 		--color-dusty-denim: #6B8CAE;
 		--color-ink: #5C4A3D;
 		--color-muted: #7a6b5f;
 		--color-teal: #6B8CAE;
 
 		/* Typographie */
-		--font-serif: 'Bodoni Moda', 'Bodoni Old Style', 'Bodoni MT', 'Didot', Georgia, serif;
-		--font-script: 'Great Vibes', 'Brush Script MT', cursive;
-		--font-body: 'Bodoni Moda', Georgia, serif;
+		--font-serif: 'Cormorant', Georgia, serif;
+		--font-script: 'Great Vibes', cursive;
+		--font-sans: 'Raleway', sans-serif;
+		--font-sans-elegant: 'Raleway', sans-serif;
+		--font-display: 'Cormorant', Georgia, serif;
+		--font-body: 'Raleway', sans-serif;
 	}
 
 	* {
@@ -111,11 +115,11 @@ const {
 		flex: 1;
 	}
 	.site-footer {
-		padding: 1.75rem 1.5rem;
+		padding: 0.25rem 1.5rem;
 		text-align: center;
 		background: var(--color-slate-blue);
 		color: var(--color-white);
-		font-size: 0.9rem;
-		font-family: var(--font-serif);
+		font-size: 1.6rem;
+		font-family: var(--font-script);
 	}
 </style>

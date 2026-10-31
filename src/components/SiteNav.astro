@@ -1,18 +1,33 @@
 ---
 import { actions } from 'astro:actions';
-import { navItems, site } from '../data/site';
+import { navItems } from '../data/site';
 
 export interface Props {
 	/** `bar` renders the thin top banner used by inner pages, `inline` a plain row. */
 	variant?: 'bar' | 'inline';
+	/** Hide the brand/logo link (useful for landing page). */
+	hideBrand?: boolean;
+	/** Custom brand image path. Defaults to the navy-background monogram. */
+	brandImage?: string;
+	/** Render the brand as a plain <span> (no link). */
+	noBrandLink?: boolean;
 }
 
-const { variant = 'bar' } = Astro.props;
+const { variant = 'bar', hideBrand = false, brandImage = '/img/Monogramme2.png', noBrandLink = false } = Astro.props;
 const group = Astro.locals.group;
 ---
 
 <nav class:list={['site-nav', `site-nav--${variant}`]} aria-label="Navigation principale">
-	<a class="site-nav__brand" href="/">{site.name}</a>
+	{!hideBrand && noBrandLink && (
+		<span class="site-nav__brand">
+			<img src={brandImage} alt="T & C" />
+		</span>
+	)}
+	{!hideBrand && !noBrandLink && (
+		<a class="site-nav__brand" href="/">
+			<img src={brandImage} alt="T & C" />
+		</a>
+	)}
 
 	<button
 		class="nav-toggle"
@@ -45,7 +60,15 @@ const group = Astro.locals.group;
 								)}
 							</a>
 						) : (
-							<button type="button" class="nav-trigger" data-submenu-toggle aria-expanded="false">
+							<button
+								type="button"
+								class:list={[
+									'nav-trigger',
+									{ active: item.children && item.children.some(child => Astro.url.pathname === child.href || Astro.url.pathname.startsWith(child.href + '/')) },
+								]}
+								data-submenu-toggle
+								aria-expanded="false"
+							>
 								{item.label}
 								{item.children && (
 									<span class="caret" aria-hidden="true">▾</span>
@@ -78,10 +101,9 @@ const group = Astro.locals.group;
 		{
 			group && (
 				<div class="site-nav__user">
-					<span class="user-name">{group.name}</span>
 					<form method="post" action={actions.logout} class="logout-form">
-						<button type="submit" class="user-logout" title="Changer d'utilisateur">
-							×
+						<button type="submit" class="user-logout" aria-label="Se déconnecter">
+							<span aria-hidden="true">⏻</span>
 						</button>
 					</form>
 				</div>
@@ -97,6 +119,7 @@ const group = Astro.locals.group;
 		gap: 2rem;
 		max-width: 1200px;
 		margin: 0 auto;
+		position: relative;
 	}
 
 	.site-nav--bar {
@@ -111,17 +134,18 @@ const group = Astro.locals.group;
 	}
 
 	.site-nav__brand {
-		font-weight: 500;
+		display: flex;
+		align-items: center;
 		color: var(--color-white);
 		text-decoration: none;
 		white-space: nowrap;
-		font-family: var(--font-serif);
-		font-size: 1rem;
-		letter-spacing: 0.03em;
+		letter-spacing: normal;
 	}
 
-	.site-nav--inline .site-nav__brand {
-		display: none;
+	.site-nav__brand img {
+		height: 2rem;
+		width: auto;
+		display: block;
 	}
 
 	/* === Bouton hamburger === */
@@ -177,7 +201,7 @@ const group = Astro.locals.group;
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		font-family: var(--font-serif);
+		font-family: var(--font-display);
 		font-variant: small-caps;
 		letter-spacing: 0.04em;
 	}
@@ -196,21 +220,55 @@ const group = Astro.locals.group;
 		font-family: inherit;
 		font-variant: small-caps;
 		letter-spacing: 0.04em;
+		line-height: 1;
+		vertical-align: middle;
 	}
 
-	.site-nav__links a:hover,
-	.site-nav__links a.active,
-	.site-nav__links .nav-trigger:hover {
-		color: var(--color-slate-blue);
+	.site-nav__links > li > a,
+	.site-nav__links > li > .nav-trigger {
+		border-bottom: 1px solid transparent;
+		transition: border-color 250ms ease, color 250ms ease;
 	}
 
-	.site-nav__links > li > a.active {
-		border-bottom: 1px solid currentColor;
+	.site-nav__links > li > a:hover,
+	.site-nav__links > li > .nav-trigger:hover {
+		border-bottom: 1px solid var(--color-white);
+	}
+
+	.site-nav__links > li > a.active,
+	.site-nav__links > li > .nav-trigger.active {
+		border-bottom: 1px solid var(--color-white);
+	}
+
+
+	/* Empêche tout flash de police au clic / focus */
+	.site-nav__links a,
+	.site-nav__links a:active,
+	.site-nav__links a:focus,
+	.site-nav__links .nav-trigger,
+	.site-nav__links .nav-trigger:active,
+	.site-nav__links .nav-trigger:focus,
+	.submenu a,
+	.submenu a:active,
+	.submenu a:focus {
+		font-family: inherit;
 	}
 
 	/* Dropdown */
 	.site-nav__links li.has-children {
 		position: relative;
+	}
+
+	.site-nav__links li.has-children::after {
+		content: '';
+		position: absolute;
+		top: 100%;
+		left: 0;
+		width: 100%;
+		height: 0.6rem;
+		background: transparent;
+		z-index: 99;
+		pointer-events: auto;
 	}
 
 	.caret {
@@ -224,34 +282,39 @@ const group = Astro.locals.group;
 		top: calc(100% + 0.35rem);
 		left: 50%;
 		transform: translateX(-50%);
-		min-width: 10rem;
-		background: var(--color-slate-blue);
-		border: 1px solid rgba(255, 255, 255, 0.12);
+		background: var(--color-cream);
+		border: 1px solid rgba(45, 74, 111, 0.12);
 		border-radius: 0.4rem;
-		padding: 0.35rem 0;
+		padding: 0.35rem 0.5rem;
 		list-style: none;
-		box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+		box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
 		opacity: 0;
 		visibility: hidden;
 		pointer-events: none;
 		transition: opacity 150ms ease, visibility 150ms ease;
 		z-index: 100;
+		display: flex;
+		align-items: center;
+		flex-wrap: nowrap;
+		gap: 0.15rem;
+		width: max-content;
+		max-width: none;
 	}
 
 	.submenu a {
-		display: block;
-		padding: 0.45rem 1rem;
+		display: inline-block;
+		padding: 0.45rem 0.75rem;
 		white-space: nowrap;
 		font-size: 0.9rem;
-		color: var(--color-white);
+		color: var(--color-navy);
 		text-decoration: none;
+		border-radius: 0.25rem;
 	}
 
 	.submenu a:hover,
 	.submenu a.active {
-		color: var(--color-cream);
-		background: rgba(0, 0, 0, 0.12);
-		border-radius: 0.25rem;
+		color: var(--color-navy);
+		background: rgba(45, 74, 111, 0.08);
 	}
 
 	.site-nav__links li.has-children:hover > .submenu,
@@ -271,13 +334,6 @@ const group = Astro.locals.group;
 		color: rgba(255, 255, 255, 0.75);
 	}
 
-	.user-name {
-		max-width: 120px;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
 	.logout-form {
 		display: inline;
 		margin: 0;
@@ -288,16 +344,44 @@ const group = Astro.locals.group;
 		background: none;
 		border: none;
 		color: rgba(255, 255, 255, 0.75);
-		font-size: 1.1rem;
+		font-family: var(--font-display), system-ui, sans-serif;
+		font-size: 1.25rem;
 		line-height: 1;
 		cursor: pointer;
-		padding: 0.15rem 0.35rem;
+		padding: 0.15rem 0.25rem;
 		border-radius: 0.25rem;
 	}
 
 	.user-logout:hover {
 		color: var(--color-white);
 		background: rgba(255, 255, 255, 0.15);
+	}
+
+	/* === Desktop centré === */
+	@media (min-width: 721px) {
+		.site-nav {
+			justify-content: center;
+		}
+		.site-nav__brand {
+			position: absolute;
+			left: 0;
+			top: 50%;
+			transform: translateY(-50%);
+			font-size: 0; /* collapse inline gap */
+		}
+		.site-nav__brand img {
+			height: 2.4rem;
+		}
+		.site-nav__menu {
+			flex: none;
+		}
+		.site-nav__user {
+			position: absolute;
+			right: 0;
+			top: 50%;
+			transform: translateY(-50%);
+			margin-left: 0;
+		}
 	}
 
 	/* === Mobile === */
@@ -323,7 +407,7 @@ const group = Astro.locals.group;
 			height: 100vh;
 			background: rgba(45, 74, 111, 0.95);
 			z-index: 101;
-			padding: 5rem 2rem 2rem;
+			padding: 5rem 1.5rem 2rem;
 			flex-direction: column;
 			align-items: center;
 			justify-content: center;
@@ -342,7 +426,7 @@ const group = Astro.locals.group;
 
 		.site-nav__links > li > a,
 		.site-nav__links > li > .nav-trigger {
-			font-size: 1.15rem;
+			font-size: 1.35rem;
 			padding: 0.4rem 0;
 			justify-content: center;
 		}
@@ -376,7 +460,7 @@ const group = Astro.locals.group;
 
 		.submenu a {
 			padding: 0.35rem 0;
-			font-size: 0.9rem;
+			font-size: 1.05rem;
 		}
 
 		/* Caret / triangle inversé en mobile */
@@ -395,8 +479,8 @@ const group = Astro.locals.group;
 	}
 
 	@media (max-width: 380px) {
-		.site-nav__brand {
-			font-size: 0.95rem;
+		.site-nav__brand img {
+			height: 1.9rem;
 		}
 
 		.site-nav__links > li > a,

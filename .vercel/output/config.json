@@ -48,11 +48,19 @@
 			"dest": "_render"
 		},
 		{
+			"src": "^/liste-mariage/?$",
+			"dest": "_render"
+		},
+		{
 			"src": "^/logement/?$",
 			"dest": "_render"
 		},
 		{
 			"src": "^/logout/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/preparatifs/?$",
 			"dest": "_render"
 		},
 		{

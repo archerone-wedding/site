@@ -1,0 +1,544 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import VenueMap from '../components/VenueMap.astro';
+import { site } from '../data/site';
+import { contact } from '../data/wedding';
+import {
+	venue,
+	venueAddress,
+	venueDirectionsUrl,
+	venueOsmUrl,
+	church,
+	churchAddress,
+	churchDirectionsUrl,
+	churchOsmUrl,
+} from '../data/wedding';
+
+interface Logement {
+	name: string;
+	url: string;
+	couchages: number;
+	distance: string;
+	rep: string;
+}
+
+const logements: Logement[] = [
+	{ name: "LA MAISON SAINT NICOLAS", url: "https://www.maison-saint-nicolas.com/", couchages: 30, distance: "5,6 km", rep: "2 gîtes, 23 et 7 couchages" },
+	{ name: "LA MAISON DES AMIS", url: "https://maisonsdesamis.fr/", couchages: 22, distance: "10,6 km", rep: "2 gîtes, 10 et 12 couchages" },
+	{ name: "LE CLOS DES MARTINES", url: "https://leclosdesmartines.com/fr/", couchages: 16, distance: "1,6 km", rep: "1 gîte" },
+	{ name: "L'ABACA GÎTES", url: "https://www.greengo.voyage/hote/l-abaca-gites", couchages: 16, distance: "13,7 km", rep: "4 gîtes, de 2 à 6 couchages" },
+	{ name: "GÎTE DU LION D'OR", url: "https://www.gites-de-france.com/fr/normandie/eure/gite-du-lion-dor-27g1100", couchages: 15, distance: "6,5 km", rep: "1 gîte" },
+	{ name: "LE CLOS SAINT PAUL", url: "https://www.clos-saint-paul.com/", couchages: 10, distance: "7,4 km", rep: "1 gîte et 2 chambres" },
+	{ name: "LA BICOQUE NORMANDE", url: "https://www.labicoquenormande.fr/", couchages: 4, distance: "5,6 km", rep: "1 gîte, au bord de l'eau" },
+];
+
+const tabs = [
+	{ id: "acces", label: "Accès" },
+	{ id: "logements", label: "Logements" },
+	{ id: "liste", label: "Liste de mariage" },
+	{ id: "legales", label: "Informations légales" },
+	{ id: "contact", label: "Nous contacter" },
+];
+---
+
+<PageLayout title={`Préparatifs — ${site.name}`}>
+	<section class="page">
+
+		<!-- Onglets -->
+		<div class="tabs-band">
+		<nav class="tabs" aria-label="Préparatifs">
+			<div class="tabs-hint" aria-hidden="true">›</div>
+			{tabs.map((tab) => (
+				<button type="button" class="tab-btn" data-tab={tab.id} aria-selected="false">
+					{tab.label}
+				</button>
+			))}
+		</nav>
+		</div>
+
+		<!-- Volet : Accès -->
+		<div class="tab-panel is-active" data-panel="acces">
+			<section class="panel-section">
+				<div class="page-header">
+					<h1 class="reveal">Accès</h1>
+					<div class="section-separator reveal-line"></div>
+				</div>
+				<div class="church reveal">
+					<p class="church__name">{church.name}</p>
+					<address class="church__address">{churchAddress}</address>
+					<ul class="church__links">
+						<li><a href={churchDirectionsUrl} rel="noopener noreferrer" target="_blank">Ouvrir l'itinéraire</a></li>
+						<li><a href={churchOsmUrl} rel="noopener noreferrer" target="_blank">Voir sur OpenStreetMap</a></li>
+					</ul>
+				</div>
+				<VenueMap lat={church.lat} lon={church.lon} zoom={church.zoom} label={churchAddress} />
+			</section>
+			<section class="panel-section" style="margin-top: 3rem;">
+				<div class="venue reveal">
+					<p class="venue__name">{venue.name}</p>
+					<address class="venue__address">{venueAddress}</address>
+					<p class="venue__parking">Un parking est disponible dans l'enceinte du domaine</p>
+					<ul class="venue__links">
+						<li><a href={venueDirectionsUrl} rel="noopener noreferrer" target="_blank">Ouvrir l'itinéraire</a></li>
+						<li><a href={venueOsmUrl} rel="noopener noreferrer" target="_blank">Voir sur OpenStreetMap</a></li>
+					</ul>
+				</div>
+				<VenueMap lat={venue.lat} lon={venue.lon} zoom={venue.zoom} label={venueAddress} />
+			</section>
+		</div>
+
+		<!-- Volet : Logements -->
+		<div class="tab-panel" data-panel="logements">
+			<section class="panel-section">
+				<div class="page-header">
+					<h1 class="reveal">Logements</h1>
+					<div class="section-separator reveal-line"></div>
+				</div>
+				<p class="intro reveal">
+					Vous trouverez ci-dessous une liste de logements situés à proximité du lieu de réception.
+				</p>
+				<div class="lodging-table reveal">
+					<table>
+						<thead>
+							<tr>
+								<th>Établissement</th>
+								<th class="num">Couchages</th>
+								<th>Distance</th>
+								<th>Répartition</th>
+							</tr>
+						</thead>
+						<tbody>
+							{logements.map((l) => (
+								<tr>
+									<td>
+										<a href={l.url} target="_blank" rel="noopener noreferrer">
+											{l.name}
+											<span class="arrow">›</span>
+										</a>
+									</td>
+									<td class="num">{l.couchages}</td>
+									<td>{l.distance}</td>
+									<td>{l.rep}</td>
+								</tr>
+							))}
+							</tbody>
+						</table>
+					</div>
+				</section>
+			</div>
+
+		<!-- Volet : Liste de mariage -->
+		<div class="tab-panel" data-panel="liste">
+			<section class="panel-section">
+				<div class="page-header">
+					<h1 class="reveal">Liste de mariage</h1>
+					<div class="section-separator reveal-line"></div>
+				</div>
+				<p class="intro reveal">
+					Votre présence en cette belle journée sera le plus beau des cadeaux.
+				</p>
+				<p class="intro reveal">
+					Pour celles et ceux qui souhaiteraient quand même nous faire un cadeau, vous pourrez contribuer à notre voyage de noces grâce à l'urne qui sera à votre disposition le jour du mariage.
+				</p>
+			</section>
+		</div>
+
+		<!-- Volet : Informations légales -->
+		<div class="tab-panel" data-panel="legales">
+			<section class="panel-section">
+				<div class="page-header">
+					<h1 class="reveal">Informations légales</h1>
+					<div class="section-separator reveal-line"></div>
+				</div>
+				<p class="reveal">
+					Ce site est hébergé par Vercel Inc.<br />
+					Les données collectées sont uniquement destinées à l'organisation du mariage et ne sont pas transmises à des tiers.
+				</p>
+			</section>
+		</div>
+
+		<!-- Volet : Contact -->
+		<div class="tab-panel" data-panel="contact">
+			<section class="panel-section">
+				<div class="page-header">
+					<h1 class="reveal">Nous contacter</h1>
+					<div class="section-separator reveal-line"></div>
+				</div>
+				<p class="contact-name reveal">{contact.name}</p>
+				<address class="contact-address reveal">
+					{contact.street}<br />
+					{contact.postalCode} {contact.city}<br />
+					{contact.country}
+				</address>
+			</section>
+		</div>
+
+	</section>
+</PageLayout>
+
+<style>
+	.page {
+		max-width: 960px;
+		margin: 0 auto;
+		padding: 1.5rem 1.5rem 4rem;
+		font-family: var(--font-sans-elegant);
+	}
+
+	/* ===== Bandeau onglets (zone rectangulaire floutée) ===== */
+	.tabs-band {
+		position: sticky;
+		/* remonté sous la nav pour que le bas de la zone touche exactement le bas du header */
+		top: 2.5rem;
+		z-index: 50;
+		background: rgba(253, 252, 250, 0.55);
+		backdrop-filter: blur(10px) saturate(1.1);
+		-webkit-backdrop-filter: blur(10px) saturate(1.1);
+		border-bottom: 1px solid rgba(93, 74, 61, 0.06);
+		margin: -1.5rem -1.5rem 1.5rem;
+		padding: 0.5rem 1.5rem;
+	}
+
+	@media (min-width: 721px) {
+		.tabs-band {
+			top: 2.7rem;
+		}
+	}
+
+	/* ===== Onglets ===== */
+	.tabs {
+		display: flex;
+		gap: 0.25rem;
+		background: rgba(253, 252, 250, 0.4);
+		border: 1px solid rgba(93, 74, 61, 0.08);
+		padding: 0.4rem 0.5rem;
+		border-radius: 0.5rem;
+		overflow-x: auto;
+		scrollbar-width: none;
+		box-shadow: 0 2px 12px rgba(45, 74, 111, 0.05);
+	}
+	.tabs::-webkit-scrollbar {
+		display: none;
+	}
+
+	.tabs-hint {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		width: 1.8rem;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		font-size: 0.9rem;
+		font-weight: 600;
+		color: var(--color-brown);
+		opacity: 0;
+		transition: opacity 200ms ease;
+		pointer-events: none;
+		z-index: 2;
+		background: linear-gradient(-90deg, var(--color-cream) 40%, transparent 100%);
+		padding-right: 0.4rem;
+	}
+
+	.tabs-hint.is-visible {
+		opacity: 0.7;
+	}
+
+	.tab-btn {
+		flex: 1 1 auto;
+		min-width: max-content;
+		padding: 0.55rem 0.9rem;
+		font-family: var(--font-sans-elegant);
+		font-variant: small-caps;
+		letter-spacing: 0.04em;
+		font-size: 0.9rem;
+		color: var(--color-brown);
+		background: transparent;
+		border: none;
+		border-radius: 0.35rem;
+		cursor: pointer;
+		transition: background 200ms ease, color 200ms ease;
+		white-space: nowrap;
+	}
+
+	.tab-btn:hover {
+		background: rgba(45, 74, 111, 0.05);
+		color: var(--color-navy-text);
+	}
+
+	.tab-btn.is-active {
+		background: var(--color-slate-blue);
+		color: var(--color-white);
+	}
+
+	/* ===== Volets ===== */
+	.tab-panel {
+		display: none;
+	}
+
+	.tab-panel.is-active {
+		display: block;
+		animation: panelFade 350ms ease;
+	}
+
+	@keyframes panelFade {
+		from { opacity: 0; transform: translateY(8px); }
+		to   { opacity: 1; transform: translateY(0); }
+	}
+
+	/* ===== Contenu (mix des pages existantes) ===== */
+	h1 {
+		margin: 0 0 0.75rem;
+		font-family: var(--font-display);
+		font-style: italic;
+		font-weight: 500;
+		font-size: clamp(1.8rem, 4vw, 2.4rem);
+		color: var(--color-navy-text);
+		letter-spacing: 0.02em;
+	}
+
+	.page-header {
+		display: inline-block;
+		vertical-align: top;
+	}
+
+	.page-header h1 {
+		margin-bottom: 0.75rem;
+	}
+
+	.section-separator {
+		width: 100%;
+		height: 1px;
+		background: var(--color-navy-text);
+		opacity: 0.35;
+		margin: 0 0 2.5rem;
+	}
+
+	/* Accès */
+	.church,
+	.venue {
+		margin-bottom: 2rem;
+	}
+
+	.church__name,
+	.venue__name {
+		margin: 0 0 0.25rem;
+		font-weight: 600;
+	}
+
+	.church__address,
+	.venue__address {
+		margin: 0 0 1.25rem;
+		font-style: normal;
+		color: var(--color-muted);
+	}
+
+	.venue__parking {
+		margin: 0 0 1.25rem;
+		font-style: normal;
+		color: var(--color-muted);
+	}
+
+	.church__links,
+	.venue__links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1.5rem;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+
+	.church__links a,
+	.venue__links a {
+		color: var(--color-teal);
+	}
+
+	/* Logements */
+	.intro {
+		margin: 0 0 1.25rem;
+		font-size: 1.05rem;
+		line-height: 1.65;
+		color: var(--color-brown);
+	}
+
+	.lodging-table {
+		width: 100%;
+		overflow-x: auto;
+	}
+
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 0.98rem;
+	}
+
+	th, td {
+		padding: 1.1rem 0.75rem;
+		text-align: left;
+		border-bottom: 1px solid rgba(93, 74, 61, 0.12);
+		vertical-align: top;
+	}
+
+	th {
+		font-weight: 500;
+		font-size: 0.8rem;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--color-gold-accent, #b58a54);
+		border-bottom-width: 2px;
+	}
+
+	th.num,
+	td.num {
+		text-align: center;
+		width: 7rem;
+	}
+
+	td a {
+		color: var(--color-brown);
+		text-decoration: none;
+		font-weight: 500;
+		letter-spacing: 0.04em;
+		font-size: 0.9rem;
+		text-transform: uppercase;
+	}
+
+	td a:hover {
+		color: var(--color-navy-text);
+	}
+
+	.arrow {
+		font-size: 1rem;
+		margin-left: 0.4rem;
+		color: var(--color-gold-accent);
+		opacity: 0.7;
+	}
+
+	tr:last-child td {
+		border-bottom: none;
+	}
+
+	/* Contact */
+	.contact-name {
+		margin: 0 0 0.5rem;
+		font-size: 1.15rem;
+		font-weight: 500;
+		color: var(--color-brown);
+	}
+
+	.contact-address {
+		font-style: normal;
+		font-size: 1.05rem;
+		line-height: 1.65;
+		color: var(--color-brown);
+	}
+
+	@media (max-width: 720px) {
+		.page {
+			padding: 1.25rem 1.25rem 3rem;
+		}
+
+		.tabs-band {
+			margin: -1.25rem -1.25rem 1.5rem;
+			padding: 0.5rem 1.25rem;
+		}
+
+		.tabs {
+			padding: 0.35rem 0.4rem;
+		}
+
+		.tab-btn {
+			padding: 0.45rem 0.7rem;
+			font-size: 0.82rem;
+		}
+	}
+
+	/* Animations reveal */
+	.reveal {
+		opacity: 0;
+		transform: translateY(25px);
+		transition: opacity 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+					transform 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	}
+
+	.reveal.is-visible {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.section-separator.reveal-line {
+		transform: scaleX(0);
+		transform-origin: center;
+		transition: transform 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s;
+	}
+
+	.section-separator.reveal-line.is-visible {
+		transform: scaleX(1);
+	}
+</style>
+
+<script>
+	// Onglets
+	const buttons = document.querySelectorAll<HTMLButtonElement>('.tab-btn');
+	const panels = document.querySelectorAll<HTMLElement>('.tab-panel');
+	const tabsContainer = document.querySelector<HTMLElement>('.tabs');
+	const hintRight = document.querySelector<HTMLElement>('.tabs-hint');
+
+	function updateHints() {
+		if (!tabsContainer || !hintRight) return;
+		const scrollLeft = tabsContainer.scrollLeft;
+		const maxScroll = tabsContainer.scrollWidth - tabsContainer.clientWidth;
+		hintRight.classList.toggle('is-visible', scrollLeft < maxScroll - 2);
+	}
+
+	if (tabsContainer) {
+		tabsContainer.addEventListener('scroll', updateHints, { passive: true });
+		window.addEventListener('resize', updateHints);
+		updateHints();
+	}
+
+	function showTab(id: string, pushState = true) {
+		let activeBtn: HTMLButtonElement | null = null;
+		buttons.forEach((btn) => {
+			const active = btn.dataset.tab === id;
+			if (active) activeBtn = btn;
+			btn.classList.toggle('is-active', active);
+			btn.setAttribute('aria-selected', String(active));
+		});
+		panels.forEach((panel) => {
+			panel.classList.toggle('is-active', panel.dataset.panel === id);
+		});
+		if (activeBtn) {
+			activeBtn.scrollIntoView({ inline: 'center', behavior: 'smooth', block: 'nearest' });
+		}
+		if (pushState) {
+			history.pushState(null, '', `#${id}`);
+		}
+	}
+
+	buttons.forEach((btn) => {
+		btn.addEventListener('click', () => {
+			const id = btn.dataset.tab;
+			if (id) showTab(id);
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		});
+	});
+
+	// Onglet actif par défaut (hash dans l'URL ou acces par défaut)
+	const initialHash = window.location.hash.replace('#', '');
+	const validHashes = ['acces', 'logements', 'liste', 'legales', 'contact'];
+	showTab(validHashes.includes(initialHash) ? initialHash : 'acces', false);
+
+	// Reveal animations
+	const observer = new IntersectionObserver((entries) => {
+		entries.forEach((entry) => {
+			if (entry.isIntersecting) {
+				entry.target.classList.add('is-visible');
+				observer.unobserve(entry.target);
+			}
+		});
+	}, { threshold: 0.15 });
+
+	document.querySelectorAll('.reveal, .reveal-line').forEach((el) => observer.observe(el));
+</script>

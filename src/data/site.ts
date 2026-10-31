@@ -1,5 +1,5 @@
 export const site = {
-	name: "Tiffany et Charles",
+	name: "Tiffany & Charles",
 	/** Name split per line for the landing hero heading. */
 	nameLines: ["Tiffany", "Charles"],
 	date: "Samedi 29 mai 2027",
@@ -19,13 +19,5 @@ export interface NavItem {
 export const navItems: readonly NavItem[] = [
 	{ label: "Programme", href: "/le-mariage" },
 	{ label: "Confirmer ma présence", href: "/rsvp" },
-	{
-		label: "Préparatifs",
-		children: [
-			{ label: "Accès", href: "/itineraire" },
-			{ label: "Logements", href: "/logement" },
-			{ label: "Informations légales", href: "/legad" },
-			{ label: "Nous contacter", href: "/contact" },
-		],
-	},
+	{ label: "Préparatifs", href: "/preparatifs" },
 ];
