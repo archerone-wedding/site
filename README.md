@@ -51,10 +51,36 @@ pnpm db:migrate:remote
 
 This is a live database write. Review migration SQL and obtain approval before running it. Never use the remote command to initialize local development.
 
+### Remote guest seeding (bulk initial + add-only incremental)
+
+`pnpm db:seed:remote` seeds the **remote** Turso database directly from `.env`'s `TURSO_DATABASE_URL` / `TURSO_AUTH_TOKEN` (loaded explicitly via `dotenv`). It is a separate command from `pnpm db:seed`, which remains local-only and unaffected by this feature.
+
+Behavior:
+
+- **Fails closed**: refuses to run unless `TURSO_DATABASE_URL` is set to a non-local URL (not `file:...`) and `TURSO_AUTH_TOKEN` is set. It never falls back to a local file.
+- **Dry run by default**: prints only aggregate counts (number of new groups/guests the CSV implies vs. what already exists) and writes nothing. Pass `--apply` to actually perform the inserts:
+
+  ```sh
+  pnpm db:seed:remote            # dry run — prints counts only, no writes
+  pnpm db:seed:remote -- --apply # performs the inserts described above
+  ```
+
+- **Add-only, never destructive**: it only INSERTs. It never updates or deletes an existing group or guest row, and it never truncates the table. This is true for both the first "bulk initial seed" run (database empty) and subsequent "incremental" runs (database already has data from manual RSVP activity).
+- **Matching strategy** (uses existing schema fields only, no migration):
+  - A CSV group is matched to an existing DB group by `accessCode` (unique).
+  - Within a matched group, a CSV guest is matched to an existing DB guest by normalized `firstName`/`lastName` (case- and accent-insensitive).
+  - If a group's generated access code or a guest identity is new (not found), it is inserted as a new row. Groups that are entirely new are inserted along with their pre-filled guests; for groups that already exist, only guests that don't already match an existing identity are inserted.
+- **Limitation**: because matching relies only on `accessCode` and normalized names (no stable identifier), renaming a guest or changing a group's effective access code in the CSV between runs will cause the script to treat it as a brand-new row rather than recognizing it as the same person/group. It will never overwrite or remove the old row in that case — you may end up with both the old and the "new" row, and should reconcile manually if that happens.
+- **Idempotent for unchanged data**: running the command again after a successful `--apply` (with unchanged names and access codes) reports nothing left to insert.
+- Output is aggregate-only: it never prints guest names, access codes, tokens, or the database URL.
+
+This is a live database write once `--apply` is passed. Review the dry-run output and obtain approval before running with `--apply`.
+
 ## Other commands
 
 | Command | Action |
 | --- | --- |
-| `pnpm test` | Run session security tests |
+| `pnpm test` | Run session security and remote-seed matching tests |
 | `pnpm build` | Build the production site |
 | `pnpm preview` | Preview a production build locally |
+| `pnpm db:seed:remote` | Dry-run (default) or `-- --apply` add-only incremental seed of the remote Turso database — see above |
