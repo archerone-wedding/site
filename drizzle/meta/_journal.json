@@ -15,6 +15,13 @@
       "when": 1792936883112,
       "tag": "0001_add_is_pre_filled",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1793519618007,
+      "tag": "0002_add_category",
+      "breakpoints": true
     }
   ]
 }

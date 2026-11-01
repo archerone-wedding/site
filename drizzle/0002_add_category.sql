@@ -1,1 +1,1 @@
-ALTER TABLE guest_group ADD COLUMN category TEXT DEFAULT 'A' NOT NULL;
+ALTER TABLE `guest_group` ADD `category` text(1) DEFAULT 'A' NOT NULL;
