@@ -12,35 +12,74 @@ const cat = group?.category || 'A';
 
 <PageLayout title={`Le mariage — ${site.name}`}>
 	<section class="page">
-		<h1 class="reveal">Le programme</h1>
-		<div class="section-separator reveal-line"></div>
+		<div class="page-bg" aria-hidden="true"></div>
+		<div class="page-content">
+			<div class="page-header">
+				<h1 class="reveal">Le programme</h1>
+				<div class="section-separator reveal-line"></div>
+			</div>
 
-		{cat === 'A' && <ProgramA />}
-		{cat === 'B' && <ProgramB />}
-		{cat === 'C' && <ProgramC />}
-		{cat === 'D' && <ProgramD />}
+			{cat === 'A' && <ProgramA />}
+			{cat === 'B' && <ProgramB />}
+			{cat === 'C' && <ProgramC />}
+			{cat === 'D' && <ProgramD />}
+		</div>
 	</section>
 </PageLayout>
 
 <style>
 	.page {
+		position: relative;
+		padding: 3rem 0 4rem;
+	}
+
+	.page-bg {
+		position: absolute;
+		inset: 0;
+		background-image: url('/img/photo_mains.jpg');
+		background-size: cover;
+		background-position: center -260px;
+		background-repeat: no-repeat;
+		z-index: 0;
+	}
+
+	.page-bg::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: rgba(250, 249, 246, 0.82);
+		z-index: 1;
+	}
+
+	.page-content {
+		position: relative;
+		z-index: 2;
 		max-width: 960px;
 		margin: 0 auto;
-		padding: 3rem 1.5rem 4rem;
+		padding: 0 1.5rem;
 	}
 
 	h1 {
 		margin: 0 0 1rem;
-		font-family: var(--font-serif);
+		font-family: var(--font-display);
 		font-style: italic;
-		font-weight: 400;
+		font-weight: 500;
 		font-size: clamp(2rem, 5vw, 2.8rem);
 		color: var(--color-navy-text);
 		letter-spacing: 0.02em;
 	}
 
+	.page-header {
+		display: inline-block;
+		vertical-align: top;
+	}
+
+	.page-header h1 {
+		margin-bottom: 0.75rem;
+	}
+
 	.section-separator {
-		width: 180px;
+		width: 100%;
 		height: 1px;
 		background: var(--color-navy-text);
 		opacity: 0.35;
@@ -72,7 +111,11 @@ const cat = group?.category || 'A';
 
 	@media (max-width: 720px) {
 		.page {
-			padding: 2rem 1.25rem 3rem;
+			padding: 2rem 0 3rem;
+		}
+
+		.page-content {
+			padding: 0 1.25rem;
 		}
 	}
 </style>

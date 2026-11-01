@@ -1,6 +1,6 @@
 export const venue = {
 	name: "Château du Chesnay-Haguest",
-	street: "Le Chesnay",
+	street: "4 hameau du Chesnay",
 	postalCode: "27630",
 	city: "Vexin-sur-Epte",
 	country: "France",
@@ -42,12 +42,10 @@ export const churchOsmUrl = `https://www.openstreetmap.org/?mlat=${church.lat}&m
 
 export const churchDirectionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(churchAddress)}`;
 
-export const contact= {
+export const contact = {
 	name: "Tiffany Harvel et Charles Labelle",
 	street: "87 rue de Billancourt",
-	postalcode: "92100",
+	postalCode: "92100",
 	city: "Boulogne-Billancourt",
 	country: "France",
-
-
-} as const ;
+} as const;

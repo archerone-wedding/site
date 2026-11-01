@@ -2,7 +2,7 @@
 import PageLayout from '../layouts/PageLayout.astro';
 import { actions } from 'astro:actions';
 import { db } from '../db/client';
-import { guest, guestGroup } from '../db/schema';
+import { guest } from '../db/schema';
 import { eq } from 'drizzle-orm';
 
 const group = Astro.locals.group;
@@ -42,19 +42,21 @@ const canBrunch = ['A', 'B'].includes(cat);
 
 <PageLayout title="Confirmer ma présence">
 	<section class="rsvp">
-		<h1>Confirmer votre présence</h1>
-		<div class="section-separator"></div>
-		<p class="intro">
-			{group.name}, merci de répondre pour chaque membre de votre foyer.
+		<div class="page-header">
+				<h1 class="reveal">Confirmer votre présence</h1>
+				<div class="section-separator reveal-line"></div>
+			</div>
+		<p class="intro reveal">
+			Merci de répondre pour chaque membre de votre foyer.
 			Vous pourrez revenir modifier votre réponse à tout moment.
 		</p>
 
 		{isSubmitted && (
-			<p class="success">Votre réponse a bien été enregistrée. Merci !</p>
+			<p class="success reveal">Votre réponse a bien été enregistrée. Merci !</p>
 		)}
 
 		{group.rsvpSubmittedAt && !isSubmitted && (
-			<p class="status">
+			<p class="status reveal">
 				Dernière réponse enregistrée le {new Date(group.rsvpSubmittedAt).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}.
 			</p>
 		)}
@@ -64,8 +66,8 @@ const canBrunch = ['A', 'B'].includes(cat);
 			{mainGuests.map((g) => (() => {
 				const p = `guest_${g.id}`;
 				const a = parseAllergies(g.allergies);
-				return (
-					<fieldset class="rsvp-card" data-guest-prefix={p}>
+				return (										
+					<fieldset class="rsvp-card reveal" data-guest-prefix={p}>
 						<div class="question stack">
 							<label class="label" for={`${p}_first_name`}>Prénom</label>
 							<input type="text" id={`${p}_first_name`} name={`${p}_first_name`}
@@ -77,14 +79,14 @@ const canBrunch = ['A', 'B'].includes(cat);
 								value={g.lastName || ''} maxlength="100" />
 						</div>
 						<div class="question">
-							<span class="label">Sera présent·e à la cérémonie religieuse ?</span>
+							<span class="label">Sera présent(e) à la cérémonie religieuse ?</span>
 							<div class="choices">
 								<label><input type="radio" name={`${p}_ceremony`} value="oui" required checked={g.attendingCeremony === true} /> Oui</label>
 								<label><input type="radio" name={`${p}_ceremony`} value="non" checked={g.attendingCeremony === false} /> Non</label>
 							</div>
 						</div>
 						<div class="question">
-							<span class="label">Sera présent·e au vin d'honneur ?</span>
+							<span class="label">Sera présent(e) au vin d'honneur ?</span>
 							<div class="choices">
 								<label><input type="radio" name={`${p}_cocktail`} value="oui" required checked={g.attendingCocktail === true} /> Oui</label>
 								<label><input type="radio" name={`${p}_cocktail`} value="non" checked={g.attendingCocktail === false} /> Non</label>
@@ -92,7 +94,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 						</div>
 						{canDinner && (
 							<div class="question">
-								<span class="label">Sera présent·e au dîner ?</span>
+								<span class="label">Sera présent(e) au dîner ?</span>
 								<div class="choices">
 									<label><input type="radio" name={`${p}_dinner`} value="oui" required checked={g.attendingDinner === true} /> Oui</label>
 									<label><input type="radio" name={`${p}_dinner`} value="non" checked={g.attendingDinner === false} /> Non</label>
@@ -101,7 +103,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 						)}
 						{canBrunch && (
 							<div class="question">
-								<span class="label">Sera présent·e au brunch du lendemain ?</span>
+								<span class="label">Sera présent(e) au brunch (dimanche) ?</span>
 								<div class="choices">
 									<label><input type="radio" name={`${p}_brunch`} value="oui" required checked={g.attendingBrunch === true} /> Oui</label>
 									<label><input type="radio" name={`${p}_brunch`} value="non" checked={g.attendingBrunch === false} /> Non</label>
@@ -109,7 +111,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 							</div>
 						)}
 						{canDinner && (
-							<div class="question">
+							<div class="question stack">
 								<label class="label" for={`${p}_menu`}>Menu</label>
 								<select id={`${p}_menu`} name={`${p}_menu`}>
 									{menuOptions.map((opt) => (
@@ -153,14 +155,14 @@ const canBrunch = ['A', 'B'].includes(cat);
 								value={g.lastName || ''} maxlength="100" />
 						</div>
 						<div class="question">
-							<span class="label">Sera présent·e à la cérémonie religieuse ?</span>
+							<span class="label">Sera présent(e) à la cérémonie religieuse ?</span>
 							<div class="choices">
 								<label><input type="radio" name={`${p}_ceremony`} value="oui" required checked={g.attendingCeremony === true} /> Oui</label>
 								<label><input type="radio" name={`${p}_ceremony`} value="non" checked={g.attendingCeremony === false} /> Non</label>
 							</div>
 						</div>
 						<div class="question">
-							<span class="label">Sera présent·e au vin d'honneur ?</span>
+							<span class="label">Sera présent(e) au vin d'honneur ?</span>
 							<div class="choices">
 								<label><input type="radio" name={`${p}_cocktail`} value="oui" required checked={g.attendingCocktail === true} /> Oui</label>
 								<label><input type="radio" name={`${p}_cocktail`} value="non" checked={g.attendingCocktail === false} /> Non</label>
@@ -168,7 +170,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 						</div>
 						{canDinner && (
 							<div class="question">
-								<span class="label">Sera présent·e au dîner ?</span>
+								<span class="label">Sera présent(e) au dîner ?</span>
 								<div class="choices">
 									<label><input type="radio" name={`${p}_dinner`} value="oui" required checked={g.attendingDinner === true} /> Oui</label>
 									<label><input type="radio" name={`${p}_dinner`} value="non" checked={g.attendingDinner === false} /> Non</label>
@@ -177,7 +179,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 						)}
 						{canBrunch && (
 							<div class="question">
-								<span class="label">Sera présent·e au brunch du lendemain ?</span>
+								<span class="label">Sera présent(e) au brunch (dimanche) ?</span>
 								<div class="choices">
 									<label><input type="radio" name={`${p}_brunch`} value="oui" required checked={g.attendingBrunch === true} /> Oui</label>
 									<label><input type="radio" name={`${p}_brunch`} value="non" checked={g.attendingBrunch === false} /> Non</label>
@@ -185,7 +187,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 							</div>
 						)}
 						{canDinner && (
-							<div class="question">
+							<div class="question stack">
 								<label class="label" for={`${p}_menu`}>Menu</label>
 								<select id={`${p}_menu`} name={`${p}_menu`}>
 									{menuOptions.map((opt) => (
@@ -214,7 +216,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 			{/* === TEMPLATE POUR NOUVEAUX INVITÉS === */}
 			{group.plusOneAllowed && (
 				<template id="new-guest-template">
-					<fieldset class="rsvp-card is-added new-guest" data-guest-prefix="new_XX">
+					<fieldset class="rsvp-card is-added new-guest reveal" data-guest-prefix="new_XX">
 						<button type="button" class="delete-btn" data-delete>Supprimer cet invité</button>
 						<div class="question stack">
 							<label class="label">Prénom</label>
@@ -225,14 +227,14 @@ const canBrunch = ['A', 'B'].includes(cat);
 							<input type="text" name="new_XX_last_name" maxlength="100" />
 						</div>
 						<div class="question">
-							<span class="label">Sera présent·e à la cérémonie religieuse ?</span>
+							<span class="label">Sera présent(e) à la cérémonie religieuse ?</span>
 							<div class="choices">
 								<label><input type="radio" name="new_XX_ceremony" value="oui" required /> Oui</label>
 								<label><input type="radio" name="new_XX_ceremony" value="non" /> Non</label>
 							</div>
 						</div>
 						<div class="question">
-							<span class="label">Sera présent·e au vin d'honneur ?</span>
+							<span class="label">Sera présent(e) au vin d'honneur ?</span>
 							<div class="choices">
 								<label><input type="radio" name="new_XX_cocktail" value="oui" required /> Oui</label>
 								<label><input type="radio" name="new_XX_cocktail" value="non" /> Non</label>
@@ -240,7 +242,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 						</div>
 						{canDinner && (
 							<div class="question">
-								<span class="label">Sera présent·e au dîner ?</span>
+								<span class="label">Sera présent(e) au dîner ?</span>
 								<div class="choices">
 									<label><input type="radio" name="new_XX_dinner" value="oui" required /> Oui</label>
 									<label><input type="radio" name="new_XX_dinner" value="non" /> Non</label>
@@ -249,7 +251,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 						)}
 						{canBrunch && (
 							<div class="question">
-								<span class="label">Sera présent·e au brunch du lendemain ?</span>
+								<span class="label">Sera présent(e) au brunch (dimanche) ?</span>
 								<div class="choices">
 									<label><input type="radio" name="new_XX_brunch" value="oui" required /> Oui</label>
 									<label><input type="radio" name="new_XX_brunch" value="non" /> Non</label>
@@ -257,7 +259,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 							</div>
 						)}
 						{canDinner && (
-							<div class="question">
+							<div class="question stack">
 								<label class="label">Menu</label>
 								<select name="new_XX_menu">
 									<option value="adulte" selected>Adulte (14 ans et plus)</option>
@@ -285,10 +287,10 @@ const canBrunch = ['A', 'B'].includes(cat);
 			)}
 
 			{group.plusOneAllowed && (
-				<button type="button" class="add-guest-btn" id="add-guest-btn">+ Ajouter un invité</button>
+				<button type="button" class="add-guest-btn reveal" id="add-guest-btn">+ Ajouter un invité</button>
 			)}
 
-			<button type="submit" class="submit">Envoyer notre réponse</button>
+			<button type="submit" class="submit reveal">Envoyer la réponse</button>
 		</form>
 	</section>
 </PageLayout>
@@ -298,20 +300,30 @@ const canBrunch = ['A', 'B'].includes(cat);
 		max-width: 700px;
 		margin: 0 auto;
 		padding: 3rem 1.5rem 4rem;
+		font-family: var(--font-sans-elegant);
 	}
 
 	h1 {
 		margin: 0 0 0.75rem;
-		font-family: var(--font-serif);
+		font-family: var(--font-display);
 		font-style: italic;
-		font-weight: 400;
+		font-weight: 500;
 		font-size: clamp(1.8rem, 4vw, 2.4rem);
 		color: var(--color-navy-text);
 		letter-spacing: 0.02em;
 	}
 
+	.page-header {
+		display: inline-block;
+		vertical-align: top;
+	}
+
+	.page-header h1 {
+		margin-bottom: 0.75rem;
+	}
+
 	.section-separator {
-		width: 180px;
+		width: 100%;
 		height: 1px;
 		background: var(--color-navy-text);
 		opacity: 0.35;
@@ -346,6 +358,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 		background: #fff;
 		position: relative;
 		min-width: 0;
+		box-shadow: 0 4px 16px rgba(45, 74, 111, 0.07);
 	}
 
 	.rsvp-card.is-added {
@@ -410,6 +423,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 
 	select,
 	input[type="text"] {
+		display: block;
 		width: 100%;
 		min-width: 0;
 		padding: 0.6rem 0.75rem;
@@ -418,7 +432,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 		border-radius: 0.35rem;
 		background: #fff;
 		color: var(--color-brown);
-		font-family: var(--font-body);
+		font-family: inherit;
 	}
 
 	.stack input[type="text"],
@@ -501,6 +515,29 @@ const canBrunch = ['A', 'B'].includes(cat);
 			padding: 1rem 1.5rem;
 		}
 	}
+
+	/* ========== Animations reveal ========== */
+	.reveal {
+		opacity: 0;
+		transform: translateY(25px);
+		transition: opacity 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+					transform 700ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	}
+
+	.reveal.is-visible {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.section-separator.reveal-line {
+		transform: scaleX(0);
+		transform-origin: center;
+		transition: transform 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.15s;
+	}
+
+	.section-separator.reveal-line.is-visible {
+		transform: scaleX(1);
+	}
 </style>
 
 <script>
@@ -580,6 +617,21 @@ const canBrunch = ['A', 'B'].includes(cat);
 			if (!fieldset) return;
 			form.insertBefore(fieldset, addBtn);
 			initCard(fieldset);
+			// Active l’animation du nouvel élément inséré
+			fieldset.classList.remove('is-visible');
+			requestAnimationFrame(() => fieldset.classList.add('is-visible'));
 		});
 	}
+
+	/* ========== Animations reveal ========== */
+	const observer = new IntersectionObserver((entries) => {
+		entries.forEach((entry) => {
+			if (entry.isIntersecting) {
+				entry.target.classList.add('is-visible');
+				observer.unobserve(entry.target);
+			}
+		});
+	}, { threshold: 0.15 });
+
+	document.querySelectorAll('.reveal, .reveal-line').forEach((el) => observer.observe(el));
 </script>

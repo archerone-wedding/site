@@ -110,15 +110,6 @@ export const server = {
 		},
 	}),
 
-	logout: defineAction({
-		accept: 'form',
-		input: z.object({}),
-		handler: async (_input, context) => {
-			context.cookies.delete('wedding_group', { path: '/' });
-			return context.redirect('/gate');
-		},
-	}),
-
 	submitRsvp: defineAction({
 		accept: 'form',
 		input: z.object({}),

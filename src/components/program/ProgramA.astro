@@ -1,12 +1,33 @@
 <div class="program-content">
   <div class="programme">
 
-    <!-- Corde centrale motif -->
-    <div class="rope-line reveal" aria-hidden="true"></div>
+    <!-- Corde torsadée verticale -->
+    <div class="rope-line reveal" aria-hidden="true">
+      <svg class="rope-svg" width="100%" height="100%" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <filter id="strandShadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="0.7" result="blur"/>
+            <feOffset in="blur" dx="0.6" dy="0.6" result="offsetBlur"/>
+            <feFlood flood-color="#8A7050" flood-opacity="0.35" result="color"/>
+            <feComposite in="color" in2="offsetBlur" operator="in" result="shadow"/>
+            <feMerge>
+              <feMergeNode in="shadow"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <pattern id="strand" width="16" height="24" patternUnits="userSpaceOnUse">
+            <path d="M0,24 C0,18 4,14 8,12 C12,10 16,6 16,0" 
+                  stroke="#CDBA98" stroke-width="1.0" fill="none" stroke-linecap="round"
+                  filter="url(#strandShadow)"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#strand)"/>
+      </svg>
+    </div>
 
     <!-- Vendredi -->
     <div class="day">
-      <h2 class="day-title reveal">Vendredi</h2>
+      <h2 class="day-title reveal">Vendredi 28 mai</h2>
 
       <div class="step reveal">
         <div class="place">
@@ -15,7 +36,7 @@
         </div>
         <div class="event">
           <span class="event-label">Mariage civil</span>
-          <span class="event-time">15h00</span>
+          <span class="event-time">Horaire à confirmer</span>
         </div>
       </div>
 
@@ -25,15 +46,15 @@
           <span class="place-city">Louviers</span>
         </div>
         <div class="event">
-          <span class="event-label">Dîner avec les témoins</span>
-          <span class="event-time">19h30</span>
+          <span class="event-label">Dîner</span>
+          <span class="event-time">20h00</span>
         </div>
       </div>
     </div>
 
     <!-- Samedi -->
     <div class="day">
-      <h2 class="day-title reveal">Samedi</h2>
+      <h2 class="day-title reveal">Samedi 29 mai</h2>
 
       <div class="step reveal">
         <div class="place">
@@ -41,7 +62,7 @@
           <span class="place-city">Vexin-sur-Epte</span>
         </div>
         <div class="event">
-          <span class="event-label">Culte</span>
+          <span class="event-label">Cérémonie religieuse</span>
           <span class="event-time">15h30</span>
         </div>
       </div>
@@ -70,14 +91,14 @@
         <div class="event">
           <span class="event-label">Soirée dansante</span>
           <span class="event-time">23h00</span>
-          <span class="event-detail">Fin de la soirée à 03h00</span>
+          <span class="event-end">(fin prévue à 03h00)</span>
         </div>
       </div>
     </div>
 
     <!-- Dimanche -->
     <div class="day">
-      <h2 class="day-title reveal">Dimanche</h2>
+      <h2 class="day-title reveal">Dimanche 30 mai</h2>
 
       <div class="step reveal">
         <div class="place">
@@ -86,7 +107,9 @@
         </div>
         <div class="event">
           <span class="event-label">Brunch</span>
-          <span class="event-time">10h00</span>
+          <span class="event-time">12h00</span>
+          <span class="event-end">(fin prévue à 16h00)</span>
+          <span class="event-detail">La journée du dimanche sera l'occasion pour ceux qui le souhaitent de profiter de la piscine et du court de tennis du domaine.</span>
         </div>
       </div>
     </div>
@@ -99,19 +122,33 @@
     position: relative;
     max-width: 900px;
     margin: 0 auto;
-    padding: 0 20px 40px;
+    padding: 0 20px 10px;
+    font-family: var(--font-sans-elegant);
   }
 
-  /* === Trait vertical bleu === */
+  /* === Corde torsadée === */
   .rope-line {
     position: absolute;
     top: 0;
     bottom: 0;
     left: 50%;
-    width: 2px;
+    width: 16px;
     transform: translateX(-50%);
+    border-radius: 8px;
+    background: #D8C8B0;
+    box-shadow:
+      inset 1px 0 2px rgba(100, 80, 55, 0.2),
+      inset -1px 0 2px rgba(255, 255, 255, 0.25),
+      1px 0 4px rgba(45, 74, 111, 0.06);
     z-index: 1;
-    background: var(--color-slate-blue, #6B8CAE);
+    overflow: hidden;
+  }
+
+  .rope-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
   }
 
   .day {
@@ -122,15 +159,15 @@
   .day-title {
     text-align: center;
     color: var(--color-navy-text, #2D4A6F);
-    font-family: var(--font-serif);
-    font-size: 1.4rem;
-    text-transform: uppercase;
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-variant: small-caps;
     letter-spacing: 3px;
     margin: 0 auto 1.75rem;
     padding: 0.6rem 1.5rem;
     max-width: 280px;
     background: var(--color-slate-blue, #6B8CAE);
-    color: var(--color-cream, #F8F2E8);
+    color: var(--color-cream, #FAF9F6);
     border: none;
     border-radius: 8px;
     position: relative;
@@ -158,8 +195,8 @@
 
   .place-name {
     display: block;
-    font-family: var(--font-serif);
-    font-size: 1.05rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
     color: var(--color-navy-text);
     font-weight: 500;
     line-height: 1.3;
@@ -169,7 +206,7 @@
     display: block;
     font-style: italic;
     color: #7a6b5f;
-    font-size: 0.92rem;
+    font-size: 1.1rem;
     margin-top: 3px;
     line-height: 1.3;
   }
@@ -180,8 +217,8 @@
 
   .event-label {
     display: block;
-    font-family: var(--font-serif);
-    font-size: 1.05rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
     color: var(--color-navy-text);
     font-weight: 500;
     line-height: 1.3;
@@ -189,43 +226,49 @@
 
   .event-time {
     display: block;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--color-gold-accent, #b58a54);
-    font-size: 1.15rem;
+    font-size: 1.1rem;
     margin-top: 4px;
     line-height: 1.3;
   }
-
+  .event-end {
+    display: block;
+    font-style: italic;
+    color: #7a6b5f;
+    font-size: 1rem;
+    margin-top: 4px;
+    line-height: 1.3;
+    position: relative;
+  }
   .event-detail {
     display: block;
     font-style: italic;
     color: #7a6b5f;
-    font-size: 0.9rem;
+    font-size: 1rem;
     margin-top: 4px;
     line-height: 1.3;
   }
 
-  /* Lignes sans lieu : on laisse la place vide à gauche */
   .step.no-place .place {
     visibility: hidden;
   }
 
-  /* === Ronds dorés sur la timeline === */
   .step::after {
     content: '';
     position: absolute;
     left: 50%;
-    top: 50%;
-    width: 12px;
-    height: 12px;
+    top: 0.75rem;
+    width: 16px;
+    height: 16px;
     background: var(--color-gold-accent, #b58a54);
-    border: 2px solid var(--color-cream, #F8F2E8);
+    border: 2px solid var(--color-cream, #FAF9F6);
     border-radius: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     z-index: 10;
+    box-shadow: 0 2px 6px rgba(45, 74, 111, 0.2);
   }
 
-  /* === Animations reveal === */
   .rope-line.reveal {
     opacity: 0;
     transition: opacity 1000ms ease 300ms;
@@ -266,7 +309,8 @@
     .rope-line {
       left: 24px;
       transform: none;
-      width: 2px;
+      width: 12px;
+      border-radius: 6px;
     }
 
     .day-title {
@@ -285,8 +329,6 @@
       margin-bottom: 1.5rem;
     }
 
-    /* Sur mobile, même les "no-place" n'affichant pas le lieu, on empile gauche→droite,
-       mais on supprime le bloc vide pour gagner de la place. */
     .step.no-place {
       padding-left: 52px;
     }
@@ -308,7 +350,8 @@
 
     .step::after {
       left: 11px;
-      transform: translateY(-50%);
+      top: 0.75rem;
+      transform: none;
     }
   }
 </style>
@@ -325,7 +368,6 @@
 
   document.querySelectorAll('.rope-line, .day-title, .step').forEach((el) => observer.observe(el));
 
-  // Stagger progressif pour les étapes (par jour)
   document.querySelectorAll('.day').forEach((day) => {
     day.querySelectorAll('.step').forEach((step, i) => {
       step.style.transitionDelay = `${Math.min(i * 0.12, 0.5)}s`;

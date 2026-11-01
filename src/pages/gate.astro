@@ -25,13 +25,16 @@ const errorMessage =
 		<meta name="viewport" content="width=device-width" />
 		<title>{site.name}</title>
 		<style is:inline>
-			@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400;1,6..96,500&family=Great+Vibes&display=swap');
+			@import url('https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Great+Vibes&family=Raleway:wght@300;400;500;600&display=swap');
 			:root {
-				--color-cream: #F8F2E8;
+				--color-cream: #FDFCFA;
 				--color-ink: #5C4A3D;
 				--color-navy: #2D4A6F;
 				--color-slate-blue: #6B8CAE;
 				--color-muted: #7a6b5f;
+				--font-display: 'Cormorant', serif;
+				--font-script: 'Great Vibes', cursive;
+				--font-sans-elegant: 'Raleway', sans-serif;
 			}
 			* { box-sizing: border-box; }
 			body {
@@ -42,7 +45,7 @@ const errorMessage =
 				justify-content: center;
 				background: var(--color-cream);
 				color: var(--color-ink);
-				font-family: 'Bodoni Moda', Georgia, serif;
+				font-family: var(--font-sans-elegant);
 				line-height: 1.6;
 				padding: 1.5rem;
 			}
@@ -55,9 +58,9 @@ const errorMessage =
 				margin: 0 0 0.25rem;
 				font-size: clamp(1.75rem, 5vw, 2.25rem);
 				font-weight: 400;
-				font-style: italic;
+				font-style: normal;
 				color: var(--color-navy);
-				font-family: 'Bodoni Moda', Georgia, serif;
+				font-family: var(--font-script);
 			}
 			.gate-subtitle {
 				margin: 0 0 1.5rem;
@@ -83,7 +86,7 @@ const errorMessage =
 				border-radius: 0.35rem;
 				background: #fff;
 				color: var(--color-ink);
-				font-family: 'Bodoni Moda', Georgia, serif;
+				font-family: var(--font-sans-elegant);
 			}
 			.gate input:focus {
 				outline: 2px solid var(--color-slate-blue);
@@ -98,7 +101,7 @@ const errorMessage =
 				border: none;
 				border-radius: 0.35rem;
 				cursor: pointer;
-				font-family: 'Bodoni Moda', Georgia, serif;
+				font-family: var(--font-sans-elegant);
 				transition: background 150ms ease;
 			}
 			.gate button:hover {
