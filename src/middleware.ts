@@ -2,6 +2,7 @@ import { defineMiddleware } from 'astro:middleware';
 import { eq } from 'drizzle-orm';
 import { db } from './db/client';
 import { guestGroup } from './db/schema';
+import { verifySession } from './auth/session';
 
 const PUBLIC_PATHS = ['/gate', '/favicon.svg', '/favicon.ico', '/admin'];
 
@@ -13,16 +14,22 @@ export const onRequest = defineMiddleware(async (context, next) => {
 		return next();
 	}
 
-	const groupId = context.cookies.get('wedding_group')?.value;
-	if (groupId) {
-		const group = await db
-			.select()
-			.from(guestGroup)
-			.where(eq(guestGroup.id, Number(groupId)))
-			.get();
-		if (group && group.isActive) {
-			context.locals.group = group;
+	const rawGroupCookie = context.cookies.get('wedding_group')?.value;
+	if (rawGroupCookie) {
+		const session = verifySession<{ groupId: number }>(rawGroupCookie, 'guest');
+		if (session && Number.isSafeInteger(session.groupId) && session.groupId > 0) {
+			const group = await db
+				.select()
+				.from(guestGroup)
+				.where(eq(guestGroup.id, session.groupId))
+				.get();
+			if (group && group.isActive) {
+				context.locals.group = group;
+			} else {
+				context.cookies.delete('wedding_group', { path: '/' });
+			}
 		} else {
+			// Malformed, tampered, expired, wrong-purpose, or legacy (plain numeric) cookie.
 			context.cookies.delete('wedding_group', { path: '/' });
 		}
 	}

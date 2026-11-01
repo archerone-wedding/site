@@ -4,10 +4,14 @@ import { isActionError } from 'astro:actions';
 import { eq } from 'drizzle-orm';
 import { db } from '../db/client';
 import { guestGroup } from '../db/schema';
+import { createSession, verifySession } from '../auth/session';
 
 const ADMIN_SECRET = import.meta.env.ADMIN_SECRET;
+// Dev-only convenience password. Only ever checked when import.meta.env.DEV is true, so it has
+// no effect in production regardless of whether ADMIN_SECRET is configured.
 const DEV_BACKDOOR = 'admin-mariage-2027';
 const COOKIE_NAME = 'wedding_admin';
+const ADMIN_SESSION_TTL_SECONDS = 60 * 60 * 4; // 4 heures
 
 function validatePassword(password: string): boolean {
 	return (!!ADMIN_SECRET && password === ADMIN_SECRET)
@@ -29,12 +33,12 @@ if (Astro.request.method === 'POST') {
 	if (formAction === 'login') {
 		const password = form.get('secret')?.toString() ?? '';
 		if (validatePassword(password)) {
-			Astro.cookies.set(COOKIE_NAME, 'authenticated', {
+			Astro.cookies.set(COOKIE_NAME, createSession('admin', {}, ADMIN_SESSION_TTL_SECONDS), {
 				httpOnly: true,
 				path: '/admin',
 				sameSite: 'strict',
 				secure: import.meta.env.PROD,
-				maxAge: 60 * 60 * 4, // 4 hours
+				maxAge: ADMIN_SESSION_TTL_SECONDS,
 			});
 			return Astro.redirect('/admin');
 		} else {
@@ -43,7 +47,15 @@ if (Astro.request.method === 'POST') {
 	}
 }
 
-const isAdmin = Astro.cookies.get(COOKIE_NAME)?.value === 'authenticated';
+const adminCookieRaw = Astro.cookies.get(COOKIE_NAME)?.value;
+const adminSession = verifySession(adminCookieRaw, 'admin');
+const isAdmin = !!adminSession;
+
+// Reject (and clear) any cookie that is not a valid signed admin session — this includes the
+// old static 'authenticated' value, which must no longer be accepted.
+if (adminCookieRaw && !isAdmin) {
+	Astro.cookies.delete(COOKIE_NAME, { path: '/admin' });
+}
 
 let groups: Awaited<ReturnType<typeof db.select>> = [];
 if (isAdmin) {

@@ -1,12 +1,18 @@
-import { createClient } from '@libsql/client/http';
+import { createClient } from '@libsql/client';
 import { drizzle } from 'drizzle-orm/libsql';
-import { eq } from 'drizzle-orm';
 import { guestGroup, guest } from '../src/db/schema';
 import * as fs from 'fs';
 import * as path from 'path';
 
-const client = createClient({ url: process.env.TURSO_DATABASE_URL || 'file:local.db', authToken: process.env.TURSO_AUTH_TOKEN });
+// This seed script NEVER reads its DB target from the environment: it is
+// local-only and always targets the isolated local SQLite file, regardless
+// of any TURSO_DATABASE_URL/TURSO_AUTH_TOKEN present in `.env`. This keeps
+// seeding (which is destructive) from ever reaching the production remote
+// Turso database.
+const client = createClient({ url: 'file:local.db' });
 const db = drizzle(client);
+
+const RESET_FLAG = process.argv.includes('--reset');
 
 // ============================================================================
 // 1. LECTURE DU CSV
@@ -244,55 +250,65 @@ function nomGroupe(data: { rows: CsvRow[] }) {
 }
 
 async function seed() {
-  console.log(`Lecture CSV : ${rows.length} invités répartis en ${groupes.size} groupes`);
-  console.log('Nettoyage de la base...');
-  await db.delete(guest);
-  await db.delete(guestGroup);
+  try {
+    console.log(`Lecture CSV : ${rows.length} invités répartis en ${groupes.size} groupes`);
 
-  let count = 0;
-  for (const [numero, { code, data }] of groupAssignments) {
-    const nom = nomGroupe(data);
-    const email = '';
-
-    const category = getMostRestrictiveCategory(data.rows);
-    const hasLogement = data.rows.some((r) => r.logement);
-
-    const groupeInsere = await db
-      .insert(guestGroup)
-      .values({
-        name: nom,
-        email,
-        accessCode: code,
-        isActive: true,
-        plusOneAllowed: data.plusOne,
-        program: '',
-        category,
-      })
-      .returning()
-      .get();
-
-    const invites = data.rows
-      .filter((r) => r.preFilled)
-      .map((r) => ({
-        groupId: groupeInsere.id,
-        firstName: r.prenom,
-        lastName: r.nom,
-        isPreFilled: true,
-      }));
-
-    if (invites.length > 0) {
-      await db.insert(guest).values(invites);
+    const existingGroups = await db.select({ id: guestGroup.id }).from(guestGroup).all();
+    const existingGuests = await db.select({ id: guest.id }).from(guest).all();
+    if ((existingGroups.length > 0 || existingGuests.length > 0) && !RESET_FLAG) {
+      throw new Error(
+        `La base locale contient déjà ${existingGroups.length} groupe(s) et ${existingGuests.length} invité(s). ` +
+          'Relancez avec --reset pour confirmer le remplacement (opération destructive).',
+      );
     }
 
-    count++;
-    console.log(`[${count}/${groupes.size}] ${nom} — code: ${code} (${invites.length} pers.)`);
-  }
+    console.log('Nettoyage de la base locale...');
+    await db.delete(guest);
+    await db.delete(guestGroup);
 
-  client.close();
-  console.log('\nSeed terminé !');
+    let count = 0;
+    for (const { code, data } of groupAssignments.values()) {
+      const nom = nomGroupe(data);
+      const email = '';
+      const category = getMostRestrictiveCategory(data.rows);
+
+      const groupeInsere = await db
+        .insert(guestGroup)
+        .values({
+          name: nom,
+          email,
+          accessCode: code,
+          isActive: true,
+          plusOneAllowed: data.plusOne,
+          program: '',
+          category,
+        })
+        .returning()
+        .get();
+
+      const invites = data.rows
+        .filter((r) => r.preFilled)
+        .map((r) => ({
+          groupId: groupeInsere.id,
+          firstName: r.prenom,
+          lastName: r.nom,
+          isPreFilled: true,
+        }));
+
+      if (invites.length > 0) {
+        await db.insert(guest).values(invites);
+      }
+
+      count++;
+    }
+
+    console.log(`\nSeed terminé : ${count} groupe(s) et ${rows.length} invité(s) traités.`);
+  } finally {
+    await client.close();
+  }
 }
 
 seed().catch((err) => {
-  console.error(err);
-  process.exit(1);
+  console.error(err instanceof Error ? err.message : 'Échec du seed local.');
+  process.exitCode = 1;
 });

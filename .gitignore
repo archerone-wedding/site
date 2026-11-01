@@ -2,7 +2,7 @@
 dist/
 .vercel/
 
-# local sqlite (replaced by Turso remote)
+# local sqlite (isolated local dev DB; never the Turso remote)
 local.db
 *.db-shm
 *.db-wal

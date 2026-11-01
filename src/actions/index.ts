@@ -3,13 +3,39 @@ import { z } from 'astro:schema';
 import { eq } from 'drizzle-orm';
 import { db } from '../db/client';
 import { guestGroup, guest } from '../db/schema';
+import { createSession, verifySession } from '../auth/session';
 
 const MENU_OPTIONS = ['adulte', 'adolescent', 'enfant', 'bebe'] as const;
+const GUEST_SESSION_TTL_SECONDS = 60 * 60 * 24 * 7; // 7 jours
 
-function getGroupFromCookie(context: any) {
-	const groupId = context.cookies.get('wedding_group')?.value;
-	if (!groupId) return null;
-	return db.select().from(guestGroup).where(eq(guestGroup.id, Number(groupId))).get();
+// Validates the signed guest session cookie and, only if it is well-formed and unexpired,
+// checks that the group it references still exists and is active. Any malformed, tampered,
+// expired, wrong-purpose, or legacy (plain numeric) cookie is rejected before any DB access
+// beyond the single active-group lookup, and before any writes.
+async function getGroupFromCookie(context: any) {
+	const raw = context.cookies.get('wedding_group')?.value;
+	const session = verifySession<{ groupId: number }>(raw, 'guest');
+	if (!session || !Number.isSafeInteger(session.groupId) || session.groupId <= 0) {
+		if (raw) context.cookies.delete('wedding_group', { path: '/' });
+		return null;
+	}
+
+	const group = await db.select().from(guestGroup).where(eq(guestGroup.id, session.groupId)).get();
+	if (!group || !group.isActive) {
+		context.cookies.delete('wedding_group', { path: '/' });
+		return null;
+	}
+	return group;
+}
+
+// Throws an ActionError('UNAUTHORIZED') unless the request carries a valid, unexpired, signed
+// admin session. Must be called before any DB access/mutation in admin-only actions.
+function requireAdmin(context: any) {
+	const raw = context.cookies.get('wedding_admin')?.value;
+	const session = verifySession(raw, 'admin');
+	if (!session) {
+		throw new ActionError({ code: 'UNAUTHORIZED', message: 'Accès refusé' });
+	}
 }
 
 function generateCode() {
@@ -31,7 +57,9 @@ export const server = {
 			plusOneAllowed: z.boolean().optional(),
 			category: z.enum(['A', 'B', 'C', 'D']).optional(),
 		}),
-		handler: async (input) => {
+		handler: async (input, context) => {
+			requireAdmin(context);
+
 			let code = generateCode();
 			// S'assurer de l'unicité
 			while (true) {
@@ -66,7 +94,9 @@ export const server = {
 		input: z.object({
 			id: z.coerce.number(),
 		}),
-		handler: async (input) => {
+		handler: async (input, context) => {
+			requireAdmin(context);
+
 			await db.delete(guest).where(eq(guest.groupId, input.id));
 			await db.delete(guestGroup).where(eq(guestGroup.id, input.id));
 			return { success: true };
@@ -98,13 +128,17 @@ export const server = {
 				.set({ lastAccessAt: new Date() })
 				.where(eq(guestGroup.id, group.id));
 
-			context.cookies.set('wedding_group', String(group.id), {
-				httpOnly: true,
-				path: '/',
-				sameSite: 'strict',
-				secure: import.meta.env.PROD,
-				maxAge: 60 * 60 * 24 * 7, // 7 jours
-			});
+			context.cookies.set(
+				'wedding_group',
+				createSession('guest', { groupId: group.id }, GUEST_SESSION_TTL_SECONDS),
+				{
+					httpOnly: true,
+					path: '/',
+					sameSite: 'strict',
+					secure: import.meta.env.PROD,
+					maxAge: GUEST_SESSION_TTL_SECONDS,
+				},
+			);
 
 			return { success: true, name: group.name };
 		},

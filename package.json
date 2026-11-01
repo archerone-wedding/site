@@ -3,15 +3,22 @@
   "type": "module",
   "version": "0.0.1",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.23.4"
   },
   "scripts": {
     "dev": "astro dev",
+    "dev:background": "astro dev --background",
     "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
+    "preview": "node --env-file=.env ./node_modules/astro/bin/astro.mjs build --config astro.preview.config.mjs && node --env-file=.env ./node_modules/astro/bin/astro.mjs preview --config astro.preview.config.mjs",
+    "preview:background": "node --env-file=.env ./node_modules/astro/bin/astro.mjs build --config astro.preview.config.mjs && node --env-file=.env ./node_modules/astro/bin/astro.mjs preview --config astro.preview.config.mjs --background",
+    "astro": "astro",
+    "test": "tsx --test src/auth/session.test.ts",
+    "db:migrate": "drizzle-kit migrate",
+    "db:migrate:remote": "drizzle-kit migrate --config=drizzle.config.remote.ts",
+    "db:seed": "tsx scripts/seed.ts"
   },
   "dependencies": {
+    "@astrojs/node": "^11.1.9",
     "@astrojs/vercel": "^11.0.16",
     "@libsql/client": "^0.18.0",
     "astro": "^7.3.8",

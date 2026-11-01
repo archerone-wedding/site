@@ -1,12 +1,15 @@
 import { defineConfig } from 'drizzle-kit';
-import 'dotenv/config';
 
+// Local-only default Drizzle config. No dotenv, no remote environment
+// variables: this config always targets the isolated local SQLite file so
+// that `db:migrate` / `db:seed` can never accidentally touch the production
+// remote Turso database. Use `drizzle.config.remote.ts` (via `db:migrate:remote`)
+// for explicit, approved remote migrations.
 export default defineConfig({
 	schema: './src/db/schema.ts',
 	out: './drizzle',
-	dialect: 'turso',
+	dialect: 'sqlite',
 	dbCredentials: {
-		url: process.env.TURSO_DATABASE_URL!,
-		authToken: process.env.TURSO_AUTH_TOKEN,
+		url: 'file:local.db',
 	},
 });

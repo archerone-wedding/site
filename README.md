@@ -1,43 +1,60 @@
-# Astro Starter Kit: Minimal
+# Wedding site
+
+Astro site for wedding information and guest RSVPs.
+
+## Local development database
+
+`pnpm dev` always uses an isolated SQLite database at `local.db` in this worktree. It ignores `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`, even if they are present in `.env`. This database is separate from the other development worktree's database.
+
+Initialize a fresh checkout from the project root:
 
 ```sh
-pnpm create astro@latest -- --template minimal
+pnpm install
+pnpm db:migrate
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+`pnpm db:migrate` uses local-only `drizzle.config.ts` and creates the schema and migration history in `local.db`.
 
-## 🚀 Project Structure
+To populate local guest records, place the private `invités.csv` file in the project root, then run:
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```sh
+pnpm db:seed
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+The seed command always targets `local.db`; it never reads database credentials from `.env`. It reads `invités.csv` from the project root and refuses to replace existing local records unless explicitly confirmed:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+```sh
+pnpm run db:seed -- --reset
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+`--reset` deletes existing local guests and groups before reseeding. Do not use it unless replacement is intended. If you do not have the CSV, skip seeding; the site can run against an empty local database. The CSV and `local.db` are ignored by Git because they may contain private guest data. Never commit or share them.
 
-## 🧞 Commands
+Start the site after initializing the schema (and optionally seeding):
 
-All commands are run from the root of the project, from a terminal:
+```sh
+pnpm dev
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
+Local development accepts the convenience admin password only in Astro's development mode. The production deployment does not accept it. A local `SESSION_SECRET` can be set for persistent local sessions; if omitted, development uses a random process-local key and sessions expire when the server restarts.
 
-## 👀 Want to learn more?
+## Production database
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Production runtime uses remote Turso and requires `TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN`, `ADMIN_SECRET`, and `SESSION_SECRET`. Local development ignores the Turso values in `.env`; the default Drizzle config and seed script remain local-only.
+
+`pnpm preview` builds with the Node adapter and serves the production build locally, unlike `pnpm dev`; it may use configured remote Turso credentials. The Vercel adapter remains configured for deployment builds. Previewed actions can write to the remote database. Use `pnpm dev` for isolated local work. Use preview with production credentials only when intentionally testing against the remote database; prefer staging data.
+
+Remote migrations require the explicit config and target the live database:
+
+```sh
+pnpm db:migrate:remote
+```
+
+This is a live database write. Review migration SQL and obtain approval before running it. Never use the remote command to initialize local development.
+
+## Other commands
+
+| Command | Action |
+| --- | --- |
+| `pnpm test` | Run session security tests |
+| `pnpm build` | Build the production site |
+| `pnpm preview` | Preview a production build locally |
