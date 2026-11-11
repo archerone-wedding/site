@@ -1,226 +1,255 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import SiteNav from '../components/SiteNav.astro';
-import { site } from '../data/site';
+import Layout from "../layouts/Layout.astro";
+import SiteNav from "../components/SiteNav.astro";
+import { site } from "../data/site";
 ---
 
 <Layout hideFooter={true}>
-	<div slot="header" class="landing-nav">
-	<SiteNav variant="inline" brandImage="/img/Monogramme-white.png" noBrandLink={true} />
-	</div>
+  <div slot="header" class="landing-nav">
+    <SiteNav
+      variant="inline"
+      brandImage="/img/Monogramme-white.png"
+      noBrandLink={true}
+    />
+  </div>
 
-	<section class="hero">
-		<div class="hero-bg" role="img" aria-label={site.name}></div>
-		<div class="hero-overlay"></div>
-		<div class="hero-panel">
-			<h1 class="reveal" data-delay="0">{site.nameLines[0]} <span class="amp">&amp;</span> {site.nameLines[1]}</h1>
-			<div class="hero-separator reveal" data-delay="1"></div>
-			<p class="date reveal" data-delay="2">29 mai 2027</p>
-		</div>
-	</section>
-
-
+  <section class="hero">
+    <div class="hero-bg" role="img" aria-label={site.name}></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-panel">
+      <h1 class="reveal" data-delay="0">
+        {site.nameLines[0]}
+        <span class="amp">&amp;</span>
+        {site.nameLines[1]}
+      </h1>
+      <div class="hero-separator reveal" data-delay="1"></div>
+      <p class="date reveal" data-delay="2">29 mai 2027</p>
+    </div>
+  </section>
 </Layout>
 
 <script>
-	const observer = new IntersectionObserver((entries) => {
-		entries.forEach((entry) => {
-			if (entry.isIntersecting) {
-				entry.target.classList.add('is-visible');
-				observer.unobserve(entry.target);
-			}
-		});
-	}, { threshold: 0.15 });
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.15 },
+  );
 
-	document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+  document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
 
-	// Nav scroll effect
-	const nav = document.querySelector('.landing-nav');
-	function updateNav() {
-		nav?.classList.toggle('is-scrolled', window.scrollY > 30);
-	}
-	updateNav();
-	window.addEventListener('scroll', updateNav, { passive: true });
+  // Nav scroll effect
+  const nav = document.querySelector(".landing-nav");
+  function updateNav() {
+    nav?.classList.toggle("is-scrolled", window.scrollY > 30);
+  }
+  updateNav();
+  window.addEventListener("scroll", updateNav, { passive: true });
 </script>
 
 <style>
-	.landing-nav {
-		position: fixed;
-		top: 0;
-		left: 0;
-		right: 0;
-		z-index: 100;
-		background: transparent;
-		transition: background 500ms ease;
-	}
+  .landing-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: transparent;
+    transition: background 500ms ease;
+  }
 
-	.landing-nav.is-scrolled,
-	.landing-nav:hover {
-		background: var(--color-navy);
-	}
+  .landing-nav.is-scrolled,
+  .landing-nav:hover {
+    background: var(--color-navy);
+  }
 
-	.landing-nav :global(.site-nav--inline) {
-		background: transparent;
-		transition: background 500ms ease;
-	}
+  .landing-nav :global(.site-nav--inline) {
+    background: transparent;
+    transition: background 500ms ease;
+  }
 
-	.landing-nav.is-scrolled :global(.site-nav--inline),
-	.landing-nav:hover :global(.site-nav--inline) {
-		background: var(--color-navy);
-	}
+  .landing-nav.is-scrolled :global(.site-nav--inline),
+  .landing-nav:hover :global(.site-nav--inline) {
+    background: var(--color-navy);
+  }
 
-	.landing-nav::before {
-		content: '';
-		position: absolute;
-		inset: 0;
-		background: var(--color-navy);
-		opacity: 0;
-		transition: opacity 600ms ease;
-		z-index: -1;
-	}
+  .landing-nav::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--color-navy);
+    opacity: 0;
+    transition: opacity 600ms ease;
+    z-index: -1;
+  }
 
-	.landing-nav.is-scrolled::before,
-	.landing-nav:hover::before {
-		opacity: 1;
-	}
+  .landing-nav.is-scrolled::before,
+  .landing-nav:hover::before {
+    opacity: 1;
+  }
 
-	.hero {
-		position: relative;
-		display: flex;
-		align-items: flex-end;
-		justify-content: center;
-		width: 100%;
-		height: 100dvh;
-		margin: 0;
-		padding: 0 0 18vh;
-		overflow: hidden;
-	}
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    width: 100%;
+    height: 100dvh;
+    margin: 0;
+    padding: 0 0 18vh;
+    overflow: hidden;
+  }
 
-	.hero-bg {
-		position: absolute;
-		inset: 0;
-		background-image: url('/img/IMG-20261027.jpg');
-		background-size: cover;
-		background-position: 65% center;
-	}
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url("/img/IMG-20261027.jpg");
+    background-size: cover;
+    background-position: 65% center;
+  }
 
-	.hero-overlay {
-		position: absolute;
-		inset: 0;
-		background: rgba(0, 0, 0, 0.35);
-		z-index: 1;
-	}
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 1;
+  }
 
-	.hero-panel {
-		position: relative;
-		z-index: 2;
-		color: var(--color-white);
-		padding: 2rem;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		text-align: center;
-	}
+  .hero-panel {
+    position: relative;
+    z-index: 2;
+    color: var(--color-white);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
 
-	.hero-panel > * {
-		position: relative;
-		z-index: 1;
-	}
+  .hero-panel > * {
+    position: relative;
+    z-index: 1;
+  }
 
-	h1 {
-		margin: 0 0 1.5rem;
-		font-family: var(--font-script);
-		font-style: normal;
-		font-weight: 400;
-		font-size: clamp(2.5rem, 6vw, 4.5rem);
-		line-height: 1.1;
-		color: var(--color-white);
-		letter-spacing: 0.02em;
-		text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
-	}
+  h1 {
+    margin: 0 0 1.5rem;
+    font-family: var(--font-script);
+    font-style: normal;
+    font-weight: 400;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    line-height: 1.1;
+    color: var(--color-white);
+    letter-spacing: 0.02em;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  }
 
-	.amp {
-		font-family: var(--font-script);
-		font-style: normal;
-		font-size: 0.85em;
-		color: var(--color-white);
-	}
+  .amp {
+    font-family: var(--font-script);
+    font-style: normal;
+    font-size: 0.85em;
+    color: var(--color-white);
+  }
 
-	.hero-separator {
-		width: 120px;
-		height: 1px;
-		background: var(--color-white);
-		margin: 0 0 1.5rem;
-		opacity: 0.7;
-	}
+  .hero-separator {
+    width: 120px;
+    height: 1px;
+    background: var(--color-white);
+    margin: 0 0 1.5rem;
+    opacity: 0.7;
+  }
 
-	.date {
-		margin: 0;
-		font-size: clamp(1.4rem, 3.5vw, 2.2rem);
-		font-family: var(--font-display);
-		font-variant: small-caps;
-		font-style: normal;
-		font-weight: 400;
-		letter-spacing: 0.04em;
-		text-transform: none;
-		color: var(--color-white);
-		text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
-	}
+  .date {
+    margin: 0;
+    font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+    font-family: var(--font-display);
+    font-variant: small-caps;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    color: var(--color-white);
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+  }
 
-	/* ========== Animations reveal ========== */
-	.reveal {
-		opacity: 0;
-		transform: translateY(30px);
-		transition: opacity 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-					transform 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-	}
+  /* ========== Animations reveal ========== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+      opacity 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
 
-	.reveal.is-visible {
-		opacity: 1;
-		transform: translateY(0);
-	}
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-	/* Séparateur : ligne qui se dessine */
-	.hero-separator.reveal {
-		transform: scaleX(0);
-		transform-origin: center center;
-		transition: opacity 600ms ease, transform 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-	}
+  /* Séparateur : ligne qui se dessine */
+  .hero-separator.reveal {
+    transform: scaleX(0);
+    transform-origin: center center;
+    transition:
+      opacity 600ms ease,
+      transform 800ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
 
-	.hero-separator.reveal.is-visible {
-		transform: scaleX(1);
-	}
+  .hero-separator.reveal.is-visible {
+    transform: scaleX(1);
+  }
 
-	/* Délais staggered */
-	.reveal[data-delay="1"].is-visible { transition-delay: 0.12s; }
-	.reveal[data-delay="2"].is-visible { transition-delay: 0.24s; }
+  /* Délais staggered */
+  .reveal[data-delay="1"].is-visible {
+    transition-delay: 0.12s;
+  }
+  .reveal[data-delay="2"].is-visible {
+    transition-delay: 0.24s;
+  }
 
-	@media (max-width: 860px) {
-		.hero {
-			padding-bottom: 12vh;
-		}
+  @media (max-width: 860px) {
+    .hero-bg {
+      /* Mobile crop options: 48% centers the couple; 43% favors left;
+			 * 53% favors right. Position shifts the crop without changing zoom.
+			 */
+      background-position: 41% center;
 
-		h1 {
-			margin-bottom: 1.25rem;
-		}
+      /* Zoom: 100% = no extra zoom (default); >100% zooms in;
+			 * <100% zooms out and may reveal empty bands. Try 110% or 90%.
+			 */
+      --hero-mobile-image-height: 95%;
+      background-size: auto var(--hero-mobile-image-height);
+    }
 
-		.hero-separator {
-			width: 80px;
-		}
-	}
+    .hero {
+      padding-bottom: 12vh;
+    }
 
-	@media (max-width: 420px) {
-		.hero {
-			padding-bottom: 10vh;
-		}
+    h1 {
+      margin-bottom: 1.25rem;
+    }
 
-		.hero-panel {
-			padding: 1.5rem;
-		}
+    .hero-separator {
+      width: 80px;
+    }
+  }
 
-		.date {
-			font-size: 1rem;
-		}
-	}
+  @media (max-width: 420px) {
+    .hero {
+      padding-bottom: 10vh;
+    }
+
+    .hero-panel {
+      padding: 1.5rem;
+    }
+
+    .date {
+      font-size: 1rem;
+    }
+  }
 </style>
