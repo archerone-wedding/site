@@ -11,6 +11,7 @@ test('CSP blocks inline scripts and allows only required third-party origins', (
 	assert.match(csp, /https:\/\/fonts\.googleapis\.com/);
 	assert.match(csp, /https:\/\/fonts\.gstatic\.com/);
 	assert.match(csp, /https:\/\/tile\.openstreetmap\.org/);
+	assert.equal(SECURITY_HEADERS['Strict-Transport-Security'], 'max-age=31536000');
 });
 
 test('Vercel static-response headers match middleware security headers', async () => {

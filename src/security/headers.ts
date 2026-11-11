@@ -15,6 +15,7 @@ export const SECURITY_HEADERS = {
 	'X-Content-Type-Options': 'nosniff',
 	'X-Frame-Options': 'DENY',
 	'Referrer-Policy': 'strict-origin-when-cross-origin',
+	'Strict-Transport-Security': 'max-age=31536000',
 	'Permissions-Policy': 'camera=(), geolocation=(), microphone=(), payment=(), usb=()',
 } as const;
 
