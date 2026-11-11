@@ -2,6 +2,10 @@
 
 Astro site for wedding information and guest RSVPs.
 
+## Dependency security
+
+Use pnpm 12.16.1 (`packageManager` in `package.json`) and the committed `pnpm-lock.yaml`; Vercel installs with `pnpm install --frozen-lockfile`. The pnpm overrides pin `glob`, `path-to-regexp`, and `undici` to patched releases where current `@vercel/nft`, `@vercel/routing-utils`, and `unifont` dependency ranges still select vulnerable versions. Remove these overrides once their parent packages select patched releases.
+
 ## Local development database
 
 `pnpm dev` always uses an isolated SQLite database at `local.db` in this worktree. It ignores `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN`, even if they are present in `.env`. This database is separate from the other development worktree's database.
