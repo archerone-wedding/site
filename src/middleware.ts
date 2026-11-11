@@ -12,7 +12,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
 	// Laisser passer les assets publics
 	if (PUBLIC_PATHS.includes(pathname) || pathname.startsWith('/_')) {
-		return withSecurityHeaders(await next());
+		return withSecurityHeaders(await next(), import.meta.env.DEV);
 	}
 
 	const rawGroupCookie = context.cookies.get('wedding_group')?.value;
@@ -36,8 +36,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
 	}
 
 	if (!context.locals.group && pathname !== '/gate') {
-		return withSecurityHeaders(context.redirect('/gate'));
+		return withSecurityHeaders(context.redirect('/gate'), import.meta.env.DEV);
 	}
 
-	return withSecurityHeaders(await next());
+	return withSecurityHeaders(await next(), import.meta.env.DEV);
 });

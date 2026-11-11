@@ -14,6 +14,17 @@ test('CSP blocks inline scripts and allows only required third-party origins', (
 	assert.equal(SECURITY_HEADERS['Strict-Transport-Security'], 'max-age=31536000');
 });
 
+test('development CSP permits Astro/Vite inline scripts and blob workers without weakening production CSP', () => {
+	const response = withSecurityHeaders(new Response('ok'), true);
+	const csp = response.headers.get('Content-Security-Policy') ?? '';
+
+	assert.match(csp, /script-src 'self' 'unsafe-inline'/);
+	assert.match(csp, /worker-src 'self' blob:/);
+	assert.match(csp, /connect-src 'self' ws: wss:/);
+	assert.doesNotMatch(SECURITY_HEADERS['Content-Security-Policy'], /unsafe-inline.*script-src|script-src[^;]*unsafe-inline/);
+	assert.doesNotMatch(SECURITY_HEADERS['Content-Security-Policy'], /worker-src/);
+});
+
 test('Vercel static-response headers match middleware security headers', async () => {
 	const config = JSON.parse(await readFile(new URL('../../vercel.json', import.meta.url), 'utf8'));
 	const configured = new Map(config.headers[0].headers.map(({ key, value }: { key: string; value: string }) => [key.toLowerCase(), value]));
