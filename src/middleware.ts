@@ -3,6 +3,7 @@ import { eq } from 'drizzle-orm';
 import { db } from './db/client';
 import { guestGroup } from './db/schema';
 import { verifySession } from './auth/session';
+import { withSecurityHeaders } from './security/headers';
 
 const PUBLIC_PATHS = ['/gate', '/favicon.svg', '/favicon.ico', '/admin'];
 
@@ -11,7 +12,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
 	// Laisser passer les assets publics
 	if (PUBLIC_PATHS.includes(pathname) || pathname.startsWith('/_')) {
-		return next();
+		return withSecurityHeaders(await next());
 	}
 
 	const rawGroupCookie = context.cookies.get('wedding_group')?.value;
@@ -35,8 +36,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
 	}
 
 	if (!context.locals.group && pathname !== '/gate') {
-		return context.redirect('/gate');
+		return withSecurityHeaders(context.redirect('/gate'));
 	}
 
-	return next();
+	return withSecurityHeaders(await next());
 });

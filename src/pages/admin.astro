@@ -214,7 +214,7 @@ const createError =
 									<td>
 										<form method="post" action={actions.deleteGroup} style="display:inline">
 											<input type="hidden" name="id" value={g.id} />
-											<button type="submit" class="logout" onclick="return confirm('Supprimer ?')">
+											<button type="submit" class="logout" data-confirm="Supprimer ?">
 												Supprimer
 											</button>
 										</form>
@@ -228,3 +228,14 @@ const createError =
 			}
 		</body>
 	</html>
+
+<script>
+	document.addEventListener('submit', (event) => {
+		const form = event.target;
+		if (form instanceof HTMLFormElement && form.querySelector('[data-confirm]')) {
+			if (!window.confirm(form.querySelector('[data-confirm]')?.getAttribute('data-confirm') ?? '')) {
+				event.preventDefault();
+			}
+		}
+	});
+</script>

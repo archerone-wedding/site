@@ -5,5 +5,10 @@ import node from '@astrojs/node';
 
 export default defineConfig({
 	output: 'server',
+	vite: {
+		build: {
+			assetsInlineLimit: 0,
+		},
+	},
 	adapter: node({ mode: 'standalone' }),
 });
