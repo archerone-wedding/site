@@ -62,6 +62,7 @@ const canBrunch = ['A', 'B'].includes(cat);
 		)}
 
 		<form method="post" action={actions.submitRsvp} class="rsvp-form" id="rsvp-form">
+			<input type="hidden" name="rsvp_submission" value="1" />
 			{/* === INVITÉS PRÉ-REMPLIS === */}
 			{mainGuests.map((g) => (() => {
 				const p = `guest_${g.id}`;

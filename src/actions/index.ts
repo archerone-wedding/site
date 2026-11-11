@@ -40,6 +40,86 @@ function requireAdmin(context: any) {
 	}
 }
 
+const RSVP_FIELDS = new Set([
+	'first_name', 'last_name', 'ceremony', 'cocktail', 'dinner', 'brunch', 'menu',
+	'allergie_vegetarien', 'allergie_sansgluten', 'allergie_sanslactose', 'allergie_autre',
+]);
+
+function validateRsvpPayload(
+	raw: Record<string, string>,
+	group: typeof guestGroup.$inferSelect,
+	guests: (typeof guest.$inferSelect)[],
+) {
+	function invalid(): never {
+		throw new ActionError({ code: 'BAD_REQUEST', message: 'Réponse RSVP invalide' });
+	}
+
+	if (raw.rsvp_submission !== '1') invalid();
+
+	const guestsByPrefix = new Map<string, typeof guest.$inferSelect>();
+	for (const guestRow of guests) {
+		guestsByPrefix.set(`${guestRow.isPreFilled ? 'guest' : 'added'}_${guestRow.id}`, guestRow);
+	}
+
+	const fieldsByPrefix = new Map<string, Set<string>>();
+	for (const [key, value] of Object.entries(raw)) {
+		if (key === 'rsvp_submission') continue;
+		const match = key.match(/^(guest|added|new)_(\d+)_(.+)$/);
+		if (!match) invalid();
+		const [, kind, idText, field] = match;
+		if (!RSVP_FIELDS.has(field)) invalid();
+		const id = Number(idText);
+		if (!Number.isSafeInteger(id) || id < 0 || (kind !== 'new' && id === 0)) invalid();
+		if (kind === 'new') {
+			if (!group.plusOneAllowed) invalid();
+		} else {
+			const guestRow = guestsByPrefix.get(`${kind}_${id}`);
+			if (!guestRow || (kind === 'guest') !== guestRow.isPreFilled) invalid();
+		}
+		if (typeof value !== 'string') invalid();
+		const prefix = `${kind}_${id}`;
+		const fields = fieldsByPrefix.get(prefix) ?? new Set<string>();
+		fields.add(field);
+		fieldsByPrefix.set(prefix, fields);
+	}
+	if (fieldsByPrefix.size === 0) invalid();
+
+	const category = group.category || 'A';
+	const canDinner = ['A', 'B', 'C'].includes(category);
+	const canBrunch = ['A', 'B'].includes(category);
+	function validateGuest(prefix: string, fields: Set<string> | undefined) {
+		if (!fields) invalid();
+		const required = ['first_name', 'last_name', 'ceremony', 'cocktail', 'allergie_autre'];
+		if (canDinner) required.push('dinner', 'menu');
+		if (canBrunch) required.push('brunch');
+		if (!required.every((field) => fields.has(field))) invalid();
+
+		const firstName = raw[`${prefix}_first_name`].trim();
+		const lastName = raw[`${prefix}_last_name`];
+		const otherAllergy = raw[`${prefix}_allergie_autre`];
+		if (!firstName || firstName.length > 100 || lastName.length > 100 || otherAllergy.length > 300) invalid();
+		for (const field of ['ceremony', 'cocktail', 'dinner', 'brunch']) {
+			const value = raw[`${prefix}_${field}`];
+			if (value !== undefined && value !== 'oui' && value !== 'non') invalid();
+		}
+		if (canDinner && !MENU_OPTIONS.includes(raw[`${prefix}_menu`] as typeof MENU_OPTIONS[number])) invalid();
+		for (const field of ['allergie_vegetarien', 'allergie_sansgluten', 'allergie_sanslactose']) {
+			const value = raw[`${prefix}_${field}`];
+			if (value !== undefined && value !== 'oui') invalid();
+		}
+	}
+
+	for (const guestRow of guests) {
+		const kind = guestRow.isPreFilled ? 'guest' : 'added';
+		const prefix = `${kind}_${guestRow.id}`;
+		const fields = fieldsByPrefix.get(prefix);
+		if (guestRow.isPreFilled || fields) validateGuest(prefix, fields);
+	}
+	for (const [prefix, fields] of fieldsByPrefix) {
+		if (prefix.startsWith('new_')) validateGuest(prefix, fields);
+	}
+}
+
 export const server = {
 	createGroup: defineAction({
 		accept: 'form',
@@ -149,9 +229,8 @@ export const server = {
 
 	submitRsvp: defineAction({
 		accept: 'form',
-		input: z.object({}),
-		handler: async (_raw, context) => {
-			const raw = _raw as Record<string, string | undefined>;
+		input: z.record(z.string(), z.string()),
+		handler: async (raw, context) => {
 			const group = await getGroupFromCookie(context);
 			if (!group) {
 				throw new ActionError({ code: 'UNAUTHORIZED', message: 'Non connecté' });
@@ -160,6 +239,7 @@ export const server = {
 			const allGuests = await db.select().from(guest).where(eq(guest.groupId, group.id)).all();
 			const preFilledGuests = allGuests.filter((g) => g.isPreFilled);
 			const addedGuests = allGuests.filter((g) => !g.isPreFilled);
+			validateRsvpPayload(raw, group, allGuests);
 
 			function parseBoolean(val: string | undefined) {
 				if (val === 'oui') return true;
