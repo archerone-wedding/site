@@ -57,7 +57,7 @@ describe('session (dev mode, explicit SESSION_SECRET)', () => {
 		const { createSession, verifySession } = await import('./session.js?t=' + Math.random());
 		const token = createSession('admin', {}, 60);
 		const [payload, signature] = token.split('.');
-		const tamperedSig = signature.slice(0, -1) + (signature.at(-1) === 'A' ? 'B' : 'A');
+		const tamperedSig = (signature[0] === 'A' ? 'B' : 'A') + signature.slice(1);
 		const tampered = `${payload}.${tamperedSig}`;
 		assert.equal(verifySession(tampered, 'admin'), null);
 	});

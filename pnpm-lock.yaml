@@ -10,19 +10,22 @@ importers:
     dependencies:
       '@astrojs/node':
         specifier: ^11.1.9
-        version: 11.1.9(astro@7.3.8(@types/node@26.6.5)(@vercel/functions@3.10.4(ws@8.22.0))(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1))
+        version: 11.1.9(astro@7.3.8(@types/node@26.6.5)(@upstash/redis@1.41.0)(@vercel/functions@3.10.4(ws@8.22.0))(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1))
       '@astrojs/vercel':
         specifier: ^11.0.16
-        version: 11.0.16(astro@7.3.8(@types/node@26.6.5)(@vercel/functions@3.10.4(ws@8.22.0))(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1))(ws@8.22.0)
+        version: 11.0.16(astro@7.3.8(@types/node@26.6.5)(@upstash/redis@1.41.0)(@vercel/functions@3.10.4(ws@8.22.0))(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1))(ws@8.22.0)
       '@libsql/client':
         specifier: ^0.18.0
         version: 0.18.0
+      '@upstash/redis':
+        specifier: ^1.41.0
+        version: 1.41.0
       astro:
         specifier: ^7.3.8
-        version: 7.3.8(@types/node@26.6.5)(@vercel/functions@3.10.4(ws@8.22.0))(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1)
+        version: 7.3.8(@types/node@26.6.5)(@upstash/redis@1.41.0)(@vercel/functions@3.10.4(ws@8.22.0))(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1)
       drizzle-orm:
         specifier: ^0.45.4
-        version: 0.45.4(@libsql/client@0.18.0)
+        version: 0.45.4(@libsql/client@0.18.0)(@upstash/redis@1.41.0)
       leaflet:
         specifier: ^1.9.4
         version: 1.9.4
@@ -1082,6 +1085,9 @@ packages:
 
   '@ungap/structured-clone@1.4.0':
     resolution: {integrity: sha512-1mEZtMKPM09vDmQt5y7YvmN2+DFTP7Tg0EWXdic8/C6VRnpb33e4ghisCIE3WZjsE2N8mf+QV1Zqh7ZFYLWInQ==}
+
+  '@upstash/redis@1.41.0':
+    resolution: {integrity: sha512-TIu9C1B0ToXQLXt2M1LQuGZ6nkMjOZPIdJyU0GGWKZToa/MvJF8x2IRDOPMIAw2BLGXGhi1aZr5AnhlXu4YLXg==}
 
   '@vercel/analytics@2.0.1':
     resolution: {integrity: sha512-MTQG6V9qQrt1tsDeF+2Uoo5aPjqbVPys1xvnIftXSJYG2SrwXRHnqEvVoYID7BTruDz4lCd2Z7rM1BdkUehk2g==}
@@ -2382,10 +2388,10 @@ snapshots:
       github-slugger: 2.0.0
       satteri: 0.10.5
 
-  '@astrojs/node@11.1.9(astro@7.3.8(@types/node@26.6.5)(@vercel/functions@3.10.4(ws@8.22.0))(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1))':
+  '@astrojs/node@11.1.9(astro@7.3.8(@types/node@26.6.5)(@upstash/redis@1.41.0)(@vercel/functions@3.10.4(ws@8.22.0))(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1))':
     dependencies:
       '@astrojs/internal-helpers': 0.13.0
-      astro: 7.3.8(@types/node@26.6.5)(@vercel/functions@3.10.4(ws@8.22.0))(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1)
+      astro: 7.3.8(@types/node@26.6.5)(@upstash/redis@1.41.0)(@vercel/functions@3.10.4(ws@8.22.0))(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1)
       send: 1.2.1
       server-destroy: 1.0.1
     transitivePeerDependencies:
@@ -2402,14 +2408,14 @@ snapshots:
       is-docker: 4.0.0
       package-manager-detector: 1.9.0
 
-  '@astrojs/vercel@11.0.16(astro@7.3.8(@types/node@26.6.5)(@vercel/functions@3.10.4(ws@8.22.0))(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1))(ws@8.22.0)':
+  '@astrojs/vercel@11.0.16(astro@7.3.8(@types/node@26.6.5)(@upstash/redis@1.41.0)(@vercel/functions@3.10.4(ws@8.22.0))(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1))(ws@8.22.0)':
     dependencies:
       '@astrojs/internal-helpers': 0.13.0
       '@vercel/analytics': 2.0.1
       '@vercel/functions': 3.10.4(ws@8.22.0)
       '@vercel/nft': 1.11.0
       '@vercel/routing-utils': 6.6.0
-      astro: 7.3.8(@types/node@26.6.5)(@vercel/functions@3.10.4(ws@8.22.0))(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1)
+      astro: 7.3.8(@types/node@26.6.5)(@upstash/redis@1.41.0)(@vercel/functions@3.10.4(ws@8.22.0))(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1)
       rolldown: 1.2.14
       tinyglobby: 0.2.17
     transitivePeerDependencies:
@@ -3091,6 +3097,10 @@ snapshots:
 
   '@ungap/structured-clone@1.4.0': {}
 
+  '@upstash/redis@1.41.0':
+    dependencies:
+      uncrypto: 0.1.3
+
   '@vercel/analytics@2.0.1': {}
 
   '@vercel/cli-config@0.3.4':
@@ -3169,7 +3179,7 @@ snapshots:
 
   aria-query@5.3.2: {}
 
-  astro@7.3.8(@types/node@26.6.5)(@vercel/functions@3.10.4(ws@8.22.0))(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1):
+  astro@7.3.8(@types/node@26.6.5)(@upstash/redis@1.41.0)(@vercel/functions@3.10.4(ws@8.22.0))(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1):
     dependencies:
       '@astrojs/compiler-rs': 0.5.2
       '@astrojs/internal-helpers': 0.12.0
@@ -3216,7 +3226,7 @@ snapshots:
       tinyglobby: 0.2.17
       ultrahtml: 1.7.0
       unifont: 0.7.5
-      unstorage: 1.17.6(@vercel/functions@3.10.4(ws@8.22.0))
+      unstorage: 1.17.6(@upstash/redis@1.41.0)(@vercel/functions@3.10.4(ws@8.22.0))
       verkit: 0.5.0
       vite: 8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1)
       vitefu: 1.1.3(vite@8.3.4(@types/node@26.6.5)(esbuild@0.28.2)(tsx@4.23.15)(yaml@2.9.1))
@@ -3391,9 +3401,10 @@ snapshots:
       esbuild: 0.25.12
       tsx: 4.23.15
 
-  drizzle-orm@0.45.4(@libsql/client@0.18.0):
+  drizzle-orm@0.45.4(@libsql/client@0.18.0)(@upstash/redis@1.41.0):
     optionalDependencies:
       '@libsql/client': 0.18.0
+      '@upstash/redis': 1.41.0
 
   dset@3.1.4: {}
 
@@ -4147,7 +4158,7 @@ snapshots:
       unist-util-is: 6.0.1
       unist-util-visit-parents: 6.0.2
 
-  unstorage@1.17.6(@vercel/functions@3.10.4(ws@8.22.0)):
+  unstorage@1.17.6(@upstash/redis@1.41.0)(@vercel/functions@3.10.4(ws@8.22.0)):
     dependencies:
       anymatch: 3.1.3
       chokidar: 5.0.0
@@ -4158,6 +4169,7 @@ snapshots:
       ofetch: 1.5.1
       ufo: 1.6.4
     optionalDependencies:
+      '@upstash/redis': 1.41.0
       '@vercel/functions': 3.10.4(ws@8.22.0)
 
   uri-js@4.4.1:

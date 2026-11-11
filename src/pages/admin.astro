@@ -5,6 +5,7 @@ import { eq } from 'drizzle-orm';
 import { db } from '../db/client';
 import { guestGroup } from '../db/schema';
 import { createSession, verifySession } from '../auth/session';
+import { checkLoginRateLimit } from '../auth/login-rate-limit';
 
 const ADMIN_SECRET = import.meta.env.ADMIN_SECRET;
 // Dev-only convenience password. Only ever checked when import.meta.env.DEV is true, so it has
@@ -32,18 +33,22 @@ if (Astro.request.method === 'POST') {
 
 	if (formAction === 'login') {
 		const password = form.get('secret')?.toString() ?? '';
-		if (validatePassword(password)) {
-			Astro.cookies.set(COOKIE_NAME, createSession('admin', {}, ADMIN_SESSION_TTL_SECONDS), {
-				httpOnly: true,
-				path: '/admin',
-				sameSite: 'strict',
-				secure: import.meta.env.PROD,
-				maxAge: ADMIN_SESSION_TTL_SECONDS,
-			});
-			return Astro.redirect('/admin');
-		} else {
-			loginError = true;
+		try {
+			const allowed = await checkLoginRateLimit(Astro.clientAddress, 'admin', 5, 15 * 60);
+			if (allowed && validatePassword(password)) {
+				Astro.cookies.set(COOKIE_NAME, createSession('admin', {}, ADMIN_SESSION_TTL_SECONDS), {
+					httpOnly: true,
+					path: '/admin',
+					sameSite: 'strict',
+					secure: import.meta.env.PROD,
+					maxAge: ADMIN_SESSION_TTL_SECONDS,
+				});
+				return Astro.redirect('/admin');
+			}
+		} catch {
+			// Treat unavailable rate limiting exactly like invalid credentials.
 		}
+		loginError = true;
 	}
 }
 

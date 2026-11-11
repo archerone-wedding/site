@@ -4,6 +4,8 @@ import { eq } from 'drizzle-orm';
 import { db } from '../db/client';
 import { guestGroup, guest } from '../db/schema';
 import { createSession, verifySession } from '../auth/session';
+import { checkLoginRateLimit } from '../auth/login-rate-limit';
+import { generateGuestCode } from '../auth/guest-code';
 
 const MENU_OPTIONS = ['adulte', 'adolescent', 'enfant', 'bebe'] as const;
 const GUEST_SESSION_TTL_SECONDS = 60 * 60 * 24 * 7; // 7 jours
@@ -38,15 +40,6 @@ function requireAdmin(context: any) {
 	}
 }
 
-function generateCode() {
-	const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-	let code = '';
-	for (let i = 0; i < 8; i++) {
-		code += chars.charAt(Math.floor(Math.random() * chars.length));
-	}
-	return code;
-}
-
 export const server = {
 	createGroup: defineAction({
 		accept: 'form',
@@ -60,7 +53,7 @@ export const server = {
 		handler: async (input, context) => {
 			requireAdmin(context);
 
-			let code = generateCode();
+			let code = generateGuestCode();
 			// S'assurer de l'unicité
 			while (true) {
 				const existing = await db
@@ -69,7 +62,7 @@ export const server = {
 					.where(eq(guestGroup.accessCode, code))
 					.get();
 				if (!existing) break;
-				code = generateCode();
+				code = generateGuestCode();
 			}
 
 			const group = await db
@@ -109,6 +102,16 @@ export const server = {
 			accessCode: z.string().min(1),
 		}),
 		handler: async (input, context) => {
+			let allowed: boolean;
+			try {
+				allowed = await checkLoginRateLimit(context.clientAddress, 'guest', 10, 10 * 60);
+			} catch {
+				throw new ActionError({ code: 'UNAUTHORIZED', message: "Nom d'utilisateur incorrect" });
+			}
+			if (!allowed) {
+				throw new ActionError({ code: 'UNAUTHORIZED', message: "Nom d'utilisateur incorrect" });
+			}
+
 			const code = input.accessCode.trim().toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 			const group = await db
 				.select()
