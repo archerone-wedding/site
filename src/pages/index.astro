@@ -18,9 +18,9 @@ import { site } from "../data/site";
     <div class="hero-overlay"></div>
     <div class="hero-panel">
       <h1 class="reveal" data-delay="0">
-        {site.nameLines[0]}
-        <span class="amp">&amp;</span>
-        {site.nameLines[1]}
+        <span class="name-word">{site.nameLines[0]}</span>
+        <span class="amp">&nbsp;&amp;&nbsp;</span>
+        <span class="name-word">{site.nameLines[1]}</span>
       </h1>
       <div class="hero-separator reveal" data-delay="1"></div>
       <p class="date reveal" data-delay="2">29 mai 2027</p>
@@ -65,7 +65,7 @@ import { site } from "../data/site";
 
   .landing-nav.is-scrolled,
   .landing-nav:hover {
-    background: var(--color-navy);
+    background: var(--color-dusty-denim);
   }
 
   .landing-nav :global(.site-nav--inline) {
@@ -75,14 +75,14 @@ import { site } from "../data/site";
 
   .landing-nav.is-scrolled :global(.site-nav--inline),
   .landing-nav:hover :global(.site-nav--inline) {
-    background: var(--color-navy);
+    background: var(--color-dusty-denim);
   }
 
   .landing-nav::before {
     content: "";
     position: absolute;
     inset: 0;
-    background: var(--color-navy);
+    background: var(--color-dusty-denim);
     opacity: 0;
     transition: opacity 600ms ease;
     z-index: -1;
@@ -101,7 +101,7 @@ import { site } from "../data/site";
     width: 100%;
     height: 100dvh;
     margin: 0;
-    padding: 0 0 18vh;
+    padding: 0 0 22vh;
     overflow: hidden;
   }
 
@@ -111,6 +111,7 @@ import { site } from "../data/site";
     background-image: url("/img/IMG-20261027.jpg");
     background-size: cover;
     background-position: 65% center;
+    background-repeat: no-repeat;
   }
 
   .hero-overlay {
@@ -147,6 +148,11 @@ import { site } from "../data/site";
     color: var(--color-white);
     letter-spacing: 0.02em;
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  .name-word,
+  .amp {
+    display: inline;
   }
 
   .amp {
@@ -219,19 +225,25 @@ import { site } from "../data/site";
 			 */
       background-position: 41% center;
 
-      /* Zoom: 100% = no extra zoom (default); >100% zooms in;
-			 * <100% zooms out and may reveal empty bands. Try 110% or 90%.
-			 */
-      --hero-mobile-image-height: 95%;
-      background-size: auto var(--hero-mobile-image-height);
+      background-size: cover;
     }
 
     .hero {
-      padding-bottom: 12vh;
+      padding-bottom: 18vh;
     }
 
     h1 {
-      margin-bottom: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2em;
+      font-size: clamp(3rem, 12vw, 4.5rem);
+      margin-bottom: 1.5rem;
+      line-height: 1.0;
+    }
+
+    .date {
+      font-size: clamp(1.5rem, 5vw, 2rem);
     }
 
     .hero-separator {
@@ -244,11 +256,21 @@ import { site } from "../data/site";
       background-size: cover;
       background-repeat: no-repeat;
     }
+
+    h1 {
+      flex-direction: row;
+      font-size: clamp(2.2rem, 8vw, 4rem);
+      line-height: 1.1;
+    }
+
+    .date {
+      font-size: clamp(1.2rem, 3.5vw, 1.8rem);
+    }
   }
 
   @media (max-width: 420px) {
     .hero {
-      padding-bottom: 10vh;
+      padding-bottom: 14vh;
     }
 
     .hero-panel {
@@ -256,7 +278,7 @@ import { site } from "../data/site";
     }
 
     .date {
-      font-size: 1rem;
+      font-size: clamp(1.3rem, 6vw, 1.8rem);
     }
   }
 </style>

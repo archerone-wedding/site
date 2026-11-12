@@ -1,24 +1,6 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
 import { site } from '../data/site';
-
-interface Logement {
-	name: string;
-	url: string;
-	couchages: number;
-	distance: string;
-	rep: string;
-}
-
-const logements: Logement[] = [
-	{ name: "LA MAISON SAINT NICOLAS", url: "https://www.maison-saint-nicolas.com/", couchages: 30, distance: "5,6 km", rep: "2 gîtes, 23 et 7 couchages" },
-	{ name: "LA MAISON DES AMIS", url: "https://maisonsdesamis.fr/", couchages: 22, distance: "10,6 km", rep: "2 gîtes, 10 et 12 couchages" },
-	{ name: "LE CLOS DES MARTINES", url: "https://leclosdesmartines.com/fr/", couchages: 16, distance: "1,6 km", rep: "1 gîte" },
-	{ name: "L'ABACA GÎTES", url: "https://www.greengo.voyage/hote/l-abaca-gites", couchages: 16, distance: "13,7 km", rep: "4 gîtes, de 2 à 6 couchages" },
-	{ name: "GÎTE DU LION D'OR", url: "https://www.gites-de-france.com/fr/normandie/eure/gite-du-lion-dor-27g1100", couchages: 15, distance: "6,5 km", rep: "1 gîte" },
-	{ name: "LE CLOS SAINT PAUL", url: "https://www.clos-saint-paul.com/", couchages: 10, distance: "7,4 km", rep: "1 gîte et 2 chambres" },
-	{ name: "LA BICOQUE NORMANDE", url: "https://www.labicoquenormande.fr/", couchages: 4, distance: "5,6 km", rep: "1 gîte, au bord de l'eau" },
-];
 ---
 
 <PageLayout title={`Logements — ${site.name}`}>
@@ -36,25 +18,54 @@ const logements: Logement[] = [
 				<thead>
 					<tr>
 						<th>Établissement</th>
-						<th class="num">Couchages</th>
-						<th>Distance</th>
+						<th >Distance</th>
+						<th>Couchages</th>
 						<th>Répartition</th>
 					</tr>
 				</thead>
 				<tbody>
-					{logements.map((l) => (
-						<tr>
-							<td>
-								<a href={l.url} target="_blank" rel="noopener noreferrer">
-									{l.name}
-									<span class="arrow">›</span>
-								</a>
-							</td>
-							<td class="num">{l.couchages}</td>
-							<td>{l.distance}</td>
-							<td>{l.rep}</td>
-						</tr>
-					))}
+					<tr>
+						<td><a href="https://leclosdesmartines.com/fr/" target="_blank" rel="noopener noreferrer">LE CLOS DES MARTINES <span class="arrow">›</span></a></td>
+						<td>1,6 km</td>
+						<td class="num">16</td>
+						<td>1 gîte</td>
+					</tr>
+					<tr>
+						<td><a href="https://www.maison-saint-nicolas.com/" target="_blank" rel="noopener noreferrer">LA MAISON SAINT NICOLAS <span class="arrow">›</span></a></td>
+						<td>5,6 km</td>
+						<td class="num">30</td>
+						<td>2 gîtes, 23 et 7 couchages</td>
+					</tr>
+					<tr>
+						<td><a href="https://www.labicoquenormande.fr/" target="_blank" rel="noopener noreferrer">LA BICOQUE NORMANDE <span class="arrow">›</span></a></td>
+						<td>5,6 km</td>
+						<td class="num">4</td>
+						<td>1 gîte, au bord de l'eau</td>
+					</tr>
+					<tr>
+						<td><a href="https://www.gites-de-france.com/fr/normandie/eure/gite-du-lion-dor-27g1100" target="_blank" rel="noopener noreferrer">GÎTE DU LION D'OR <span class="arrow">›</span></a></td>
+						<td>6,5 km</td>
+						<td class="num">15</td>
+						<td>1 gîte</td>
+					</tr>
+					<tr>
+						<td><a href="https://www.clos-saint-paul.com/" target="_blank" rel="noopener noreferrer">LE CLOS SAINT PAUL <span class="arrow">›</span></a></td>
+						<td>7,4 km</td>
+						<td class="num">10</td>
+						<td>1 gîte et 2 chambres</td>
+					</tr>
+					<tr>
+						<td><a href="https://maisonsdesamis.fr/" target="_blank" rel="noopener noreferrer">LA MAISON DES AMIS <span class="arrow">›</span></a></td>
+						<td>10,6 km</td>
+						<td class="num">22</td>
+						<td>2 gîtes, 10 et 12 couchages</td>
+					</tr>
+					<tr>
+						<td><a href="https://www.greengo.voyage/hote/l-abaca-gites" target="_blank" rel="noopener noreferrer">L'ABACA GÎTES <span class="arrow">›</span></a></td>
+						<td>13,7 km</td>
+						<td class="num">16</td>
+						<td>4 gîtes, de 2 à 6 couchages</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
@@ -131,7 +142,7 @@ const logements: Logement[] = [
 		font-size: 0.8rem;
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
-		color: var(--color-gold-accent, #b58a54);
+		color: var(--color-goldenrod, #b58a54);
 		border-bottom-width: 2px;
 	}
 
